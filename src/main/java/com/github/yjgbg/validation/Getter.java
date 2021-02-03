@@ -21,6 +21,7 @@ import java.util.function.Function;
  */
 @FunctionalInterface
 public interface Getter<A, B> extends Function<A, B>, Serializable {
+    HashMap<Class<?>, String> GETTER_NAME_CACHE = new HashMap<>();
 	@SneakyThrows
 	private String propertyName0() {
 		final var method = this.getClass().getDeclaredMethod("writeReplace");
@@ -36,31 +37,10 @@ public interface Getter<A, B> extends Function<A, B>, Serializable {
 	 */
 	default String propertyName() {
 		final var clazz = getClass();
-		final var res0 = PackageCascade.GETTER_NAME_CACHE.get(clazz);
+		final var res0 = GETTER_NAME_CACHE.get(clazz);
 		if (res0 != null) return res0;
 		final var res = propertyName0();
-		PackageCascade.GETTER_NAME_CACHE.put(clazz, res);
+		GETTER_NAME_CACHE.put(clazz, res);
 		return res;
 	}
-
-	static <A> Getter<A,A> self() {
-		return new Getter<>() {
-			@Override
-			public A apply(A a) {
-				return a;
-			}
-
-			@Override
-			public String propertyName() {
-				return null;
-			}
-		};
-	}
-}
-
-/**
- * 包级常量，不暴露到外部
- */
-class PackageCascade {
-	static HashMap<Class<?>, String> GETTER_NAME_CACHE = new HashMap<>();
 }

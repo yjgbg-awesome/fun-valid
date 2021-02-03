@@ -5,63 +5,65 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-/**
- * Error的构建，以及相关运算，包括Error的加法，以及Error与string的运算
- */
+/** Error的构建，以及相关运算，包括Error的加法，以及Error与string的运算 */
 @Getter
 @ToString
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Error {
-  List<String> codes;
+  Set<String> messages;
   Map<String, Error> errors;
 
-  private static final Error NONE = new Error(List.of(), Map.of());
+  private static final Error NONE = new Error(Set.of(), Map.of());
+
   public static Error none() {
     return NONE;
   }
-  public static Error code(@NotNull String code) {
-    return new Error(List.of(code),new HashMap<>());
+
+
+  @Contract(pure = true)
+  public static Error message(@NotNull String message) {
+    return new Error(Set.of(message), Map.of());
   }
 
   /**
    * 定义了与字符串的wrapper运算
+   *
    * @param key
    * @param error
    * @return
    */
-  public static Error wrapper(@NotNull String key, @NotNull Error error) {
-    if (error==none()) return none();
-    return new Error(List.of(), Map.of(key, error));
+  @Contract(pure = true)
+  public static Error wrapper(@NotNull String key, @Nullable Error error) {
+    if (error == null) return none();
+    if (error == none()) return none();
+    return new Error(Collections.emptySet(), Map.of(key, error));
   }
 
   /**
    * 定义了两个Error的加法
+   *
    * @param error1
    * @param error2
    * @return
    */
   @NotNull
+  @Contract(pure = true)
   public static Error plus(@Nullable Error error1, @Nullable Error error2) {
-    if (error1==null||error1==none()) {
-      if (error2==null||error2==none()) return none();
-      return error2;
-    }
-    if (error2==null||error2==none()) return error1;
-    final var codes1 = error1.codes;
-    final var codes2 = error2.codes;
-    final var codes = new ArrayList<String>();
-    codes.addAll(codes1);
-    codes.addAll(codes2);
-    final var errors1 = error1.errors;
-    final var errors2 = error2.errors;
-    final var errors = new HashMap<>(errors1);
-    errors2.forEach((k, v) -> errors.put(k, plus(errors.get(k), v)));
-    return new Error(codes, errors);
+    if (error1 == null) return plus(none(), error2);
+    if (error2 == null) return plus(error1, none());
+    if (error1==none()) return error2;
+    if (error2==none()) return error1;
+    final var messages = new HashSet<>(error1.getMessages());
+    error2.getMessages().stream().filter(x ->!messages.contains(x)).forEach(messages::add);
+    final var errors = new HashMap<>(error1.getErrors());
+    error2.getErrors().forEach((k, v) -> errors.put(k, plus(errors.get(k), v)));
+    return new Error(messages, errors);
   }
 }
