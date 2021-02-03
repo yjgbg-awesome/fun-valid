@@ -1,5 +1,9 @@
 package com.github.yjgbg.validation;
 
+import com.github.yjgbg.validation.core.Error;
+import com.github.yjgbg.validation.core.Validator;
+import com.github.yjgbg.validation.core.BaseValidatorExt;
+import com.github.yjgbg.validation.ext.JSR380Ext;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -10,18 +14,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@ExtensionMethod({ValidatorExt.class, JSR380Ext.class})
+@ExtensionMethod({BaseValidatorExt.class, JSR380Ext.class})
 public class Sample {
   public static void main(String[] args) {
     final var entity1 = new Entity1(null, 2L, true, Collections.emptyList());
-
     final var validator =
-        Validator.<Entity1>none()
+        Validator.<Entity1>failFast(true)
             .assertTrue(Entity1::getField3)
-            .and(Entity1::getField2, x -> x > 3L, "field2大于3")
-            .and(Entity1::getField1, Objects::nonNull, "field1不得为空");
+            .min(Entity1::getField2, 3L, "field2应该大于3")
+            .and(Entity1::getField1, Objects::nonNull, __ -> "field1不得为空");
     final var errors = validator.apply(entity1);
-    final var requestBody = Error.wrapper("requestBody",errors);
+    final var requestBody = Error.wrapper("requestBody", errors);
     System.out.println(errors);
   }
 }

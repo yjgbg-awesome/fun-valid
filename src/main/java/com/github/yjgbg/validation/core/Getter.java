@@ -1,4 +1,4 @@
-package com.github.yjgbg.validation;
+package com.github.yjgbg.validation.core;
 
 import lombok.SneakyThrows;
 
@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 /**
  * 表示一个javaBean中的get方法
- * 用途：在构造ExecutableSpecification对象的时候，希望对路径有类型安全的表达，而不是拼接字符串
+ * 用途：希望对路径有类型安全的表达，而不是拼接字符串
  * <p>
  * 例如: Role role = new User().getRole();
  * Getter&lt;User,Role&gt; getter = User::getRole;

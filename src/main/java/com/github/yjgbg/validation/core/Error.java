@@ -1,4 +1,4 @@
-package com.github.yjgbg.validation;
+package com.github.yjgbg.validation.core;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,10 +17,11 @@ import java.util.*;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Error {
+  Object rejectValue;
   Set<String> messages;
   Map<String, Error> errors;
 
-  private static final Error NONE = new Error(Set.of(), Map.of());
+  private static final Error NONE = new Error(null,Set.of(), Map.of());
 
   public static Error none() {
     return NONE;
@@ -28,8 +29,8 @@ public class Error {
 
 
   @Contract(pure = true)
-  public static Error message(@NotNull String message) {
-    return new Error(Set.of(message), Map.of());
+  public static Error message(Object rejectValue,@NotNull final String message) {
+    return new Error(rejectValue,Set.of(message), Map.of());
   }
 
   /**
@@ -40,10 +41,10 @@ public class Error {
    * @return
    */
   @Contract(pure = true)
-  public static Error wrapper(@NotNull String key, @Nullable Error error) {
+  public static Error wrapper(@NotNull final String key, @Nullable final Error error) {
     if (error == null) return none();
     if (error == none()) return none();
-    return new Error(Collections.emptySet(), Map.of(key, error));
+    return new Error(null,Collections.emptySet(), Map.of(key, error));
   }
 
   /**
@@ -55,7 +56,7 @@ public class Error {
    */
   @NotNull
   @Contract(pure = true)
-  public static Error plus(@Nullable Error error1, @Nullable Error error2) {
+  public static Error plus(@Nullable final Error error1, @Nullable final Error error2) {
     if (error1 == null) return plus(none(), error2);
     if (error2 == null) return plus(error1, none());
     if (error1==none()) return error2;
@@ -64,6 +65,6 @@ public class Error {
     error2.getMessages().stream().filter(x ->!messages.contains(x)).forEach(messages::add);
     final var errors = new HashMap<>(error1.getErrors());
     error2.getErrors().forEach((k, v) -> errors.put(k, plus(errors.get(k), v)));
-    return new Error(messages, errors);
+    return new Error(null,messages, errors);
   }
 }
