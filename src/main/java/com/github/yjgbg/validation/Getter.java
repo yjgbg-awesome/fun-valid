@@ -1,7 +1,6 @@
 package com.github.yjgbg.validation;
 
 import lombok.SneakyThrows;
-import lombok.val;
 
 import java.beans.Introspector;
 import java.io.Serializable;
@@ -24,10 +23,10 @@ import java.util.function.Function;
 public interface Getter<A, B> extends Function<A, B>, Serializable {
 	@SneakyThrows
 	private String propertyName0() {
-		val method = this.getClass().getDeclaredMethod("writeReplace");
+		final var method = this.getClass().getDeclaredMethod("writeReplace");
 		method.setAccessible(Boolean.TRUE);
-		val serializedLambda = (SerializedLambda) method.invoke(this);
-		val getter = serializedLambda.getImplMethodName();
+		final var serializedLambda = (SerializedLambda) method.invoke(this);
+		final var getter = serializedLambda.getImplMethodName();
 		return Introspector.decapitalize(getter.replace("get", ""));
 	}
 
@@ -36,16 +35,16 @@ public interface Getter<A, B> extends Function<A, B>, Serializable {
 	 * @return 返回该get方法对应的属性的名称
 	 */
 	default String propertyName() {
-		val clazz = getClass();
-		val res0 = PackageCascade.GETTER_NAME_CACHE.get(clazz);
+		final var clazz = getClass();
+		final var res0 = PackageCascade.GETTER_NAME_CACHE.get(clazz);
 		if (res0 != null) return res0;
-		val res = propertyName0();
+		final var res = propertyName0();
 		PackageCascade.GETTER_NAME_CACHE.put(clazz, res);
 		return res;
 	}
 
 	static <A> Getter<A,A> self() {
-		return new Getter<A, A>() {
+		return new Getter<>() {
 			@Override
 			public A apply(A a) {
 				return a;
