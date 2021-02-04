@@ -1,8 +1,5 @@
 package com.github.yjgbg.validation.core;
 
-import com.github.yjgbg.validation.core.Getter;
-import com.github.yjgbg.validation.core.Validator;
-
 import java.util.function.Function;
 import java.util.function.Predicate;
 

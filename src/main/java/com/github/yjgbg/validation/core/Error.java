@@ -27,10 +27,9 @@ public class Error {
     return NONE;
   }
 
-
   @Contract(pure = true)
-  public static Error message(Object rejectValue,@NotNull final String message) {
-    return new Error(rejectValue,Set.of(message), Map.of());
+  public static Error message(@NotNull Object rejectValue, @NotNull final String message) {
+      return new Error(rejectValue, Set.of(message), Map.of());
   }
 
   /**
