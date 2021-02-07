@@ -1,9 +1,7 @@
 package com.github.yjgbg.validation;
 
 import com.github.yjgbg.validation.core.BaseValidatorExt;
-import com.github.yjgbg.validation.core.Error;
 import com.github.yjgbg.validation.core.Validator;
-import com.github.yjgbg.validation.ext.JSR380Ext;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +12,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@ExtensionMethod({BaseValidatorExt.class, JSR380Ext.class})
+@ExtensionMethod({BaseValidatorExt.class})
 public class Sample {
   public static void main(String[] args) {
-      final var entity1 = new Entity1(null, 2L, true, Collections.emptyList());
-      final var validator =
-              Validator.<Entity1>failFast(false)
-                      .assertTrue(Entity1::getField3)
-                      .min(Entity1::getField2, 3L, "field2应该大于3")
-                      .max(Entity1::getField2, 1L, "field2应该小于1")
-                      .and(Entity1::getField1, Objects::nonNull, __ -> "field1不得为null");
-      final var errors = validator.apply(entity1);
-    final var requestBody = Error.wrapper("requestBody", errors);
-    System.out.println(errors);
+      final var entity1 = new Entity1("null", 0L, false, Collections.emptyList());
+      final var errors =
+              Validator.<Entity1>none()
+                      .and(Objects::nonNull, "对象为空:%s".msg())
+                      .and(Entity1::getField2, field2 -> field2 != null && field2 < 1, "field2应该小于1,但是真实值为%s".msg())
+                      .and(Entity1::getField1, Objects::nonNull, "field1不得为null".msg())
+                      .and(Entity1::getEntity1List, x -> x != null && x.size() > 1, "size至少为1".msg())
+                      .andIter(Entity1::getEntity1List, Validator.none())
+                      .apply(entity1, true);
+      System.out.println("---------------------------");
+      System.out.println(errors);
   }
 }
 
