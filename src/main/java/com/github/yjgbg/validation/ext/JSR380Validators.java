@@ -10,39 +10,43 @@ public final class JSR380Validators {
   }
 
   public static Validator<Boolean> assertTrue() {
-    return Validator.of(x -> x, __ -> "javax.validation.constraints.AssertTrue.message");
+      return Validator.of(
+              x -> x != null && x, __ -> "javax.validation.constraints.AssertTrue.message");
   }
 
   public static Validator<Boolean> assertTrue(String message) {
-    return Validator.of(x -> x, __ -> message);
+      return Validator.of(x -> x != null && x, __ -> message);
   }
 
   public static Validator<Boolean> assertFalse() {
-    return Validator.of(x -> !x, __ -> "javax.validation.constraints.AssertFalse.message");
+      return Validator.of(
+              x -> x != null && !x, __ -> "javax.validation.constraints.AssertFalse.message");
   }
 
   public static Validator<Boolean> assertFalse(Function<Boolean, String> message) {
-    return Validator.of(x -> !x, message);
+      return Validator.of(x -> x != null && !x, message);
   }
 
   public static <A extends Comparable<A>> Validator<A> max(A upperBound) {
-    return Validator.of(
-        x -> x.compareTo(upperBound) <= 0, __ -> "javax.validation.constraints.Max.message");
+      return Validator.of(
+              x -> x != null && x.compareTo(upperBound) <= 0,
+              __ -> "javax.validation.constraints.Max.message");
   }
 
   public static <A extends Comparable<A>> Validator<A> max(
       A upperBound, Function<A, String> message) {
-    return Validator.of(x -> x.compareTo(upperBound) <= 0, message);
+      return Validator.of(x -> x != null && x.compareTo(upperBound) <= 0, message);
   }
 
   public static <A extends Comparable<A>> Validator<A> min(A lowerBound) {
-    return Validator.of(
-        x -> x.compareTo(lowerBound) >= 0, __ -> "javax.validation.constraints.Min.message");
+      return Validator.of(
+              x -> x != null && x.compareTo(lowerBound) >= 0,
+              __ -> "javax.validation.constraints.Min.message");
   }
 
   public static <A extends Comparable<A>> Validator<A> min(
       A lowerBound, Function<A, String> message) {
-    return Validator.of(x -> x.compareTo(lowerBound) >= 0, message);
+      return Validator.of(x -> x != null && x.compareTo(lowerBound) >= 0, message);
   }
 
   public static <A extends Comparable<A>> Validator<A> range(
