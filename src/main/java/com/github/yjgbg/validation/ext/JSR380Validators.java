@@ -53,4 +53,8 @@ public final class JSR380Validators {
       A lowerBound, A upperBound, Function<A, String> message) {
     return Validator.plus(max(upperBound, message), min(lowerBound, message));
   }
+
+  public static <A extends Comparable<A>> Validator<A> range(A lowerBound, A upperBound) {
+    return Validator.plus(max(upperBound), min(lowerBound));
+  }
 }

@@ -44,4 +44,14 @@ public class JSR380Ext {
       Validator<A> that, Getter<A, B> prop, B lowerBound, String message) {
     return that.and(prop, JSR380Validators.min(lowerBound, __ -> message));
   }
+
+  public static <A, B extends Comparable<B>> Validator<A> range(
+      Validator<A> that, Getter<A, B> prop, B lowerBound, B upperBound, String message) {
+    return that.and(prop, JSR380Validators.range(lowerBound, upperBound, __ -> message));
+  }
+
+  public static <A, B extends Comparable<B>> Validator<A> range(
+      Validator<A> that, Getter<A, B> prop, B lowerBound, B upperBound) {
+    return that.and(prop, JSR380Validators.range(lowerBound, upperBound));
+  }
 }
