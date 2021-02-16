@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -55,15 +55,7 @@ public class BaseValidatorExt {
     return Validator.iter(that);
   }
 
-  public static <A, B> B ap(A that, Function<A, B> function) {
-    return function.apply(that);
-  }
-
-  public static <A> void ac(A that, Consumer<A> consumer) {
-    consumer.accept(that);
-  }
-
-  public static Errors wrapper(Errors that, String key) {
-    return Errors.wrapper(key, that);
+  public static <A,B,C> Function<A,Function<B,C>> curried(BiFunction<A,B,C> that) {
+      return failFast -> obj -> that.apply(failFast,obj);
   }
 }
