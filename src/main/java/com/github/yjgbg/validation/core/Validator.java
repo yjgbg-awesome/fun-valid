@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
 /**
- * Validator接口，静态:Validator的构建，Validator与Getter的wrapper运算,Validator之间的加法
+ * Validator接口,以及Validator之间的运算
  *
  * @param <A>
  */
@@ -23,15 +23,14 @@ public interface Validator<@Nullable A> extends BiFunction<@NotNull Boolean,A,Er
 
   static <A> Validator<A> of(
       Predicate<@Nullable A> predicate, Function<@Nullable A, String> message) {
-    return (failFast,obj) -> predicate.test(obj) ? Errors.none() : Errors.message(obj, message.apply(obj));
+    return (failFast, obj) ->
+        predicate.test(obj) ? Errors.none() : Errors.message(obj, message.apply(obj));
   }
 
   static <A, B> Validator<A> wrapper(
-      Getter<@Nullable A, @Nullable B> prop, Validator<B> validator) {
+      Getter<@Nullable A, @Nullable B> prop, Validator<? super B> validator) {
     return (failFast,obj) ->
-            Errors.wrapper(
-                prop.propertyName(),
-                validator.apply(failFast, obj != null ? prop.apply(obj) : null));
+            Errors.wrapper(prop.propertyName(), validator.apply(failFast, obj != null ? prop.apply(obj) : null));
   }
 
   /**
@@ -41,27 +40,24 @@ public interface Validator<@Nullable A> extends BiFunction<@NotNull Boolean,A,Er
    * @param <A>
    * @return
    */
-  static <A> Validator<Iterable<A>> iter(Validator<A> validator) {
-    return (failFast,obj) -> {
-          final var atomicInt = new AtomicInteger(0);
-          final var stream =
-              StreamSupport.stream(obj.spliterator(), false)
-                  .map(x -> validator.apply(failFast, x))
-                  .filter(Errors::hasError)
-                  .map(
-                      errors ->
-                          Errors.wrapper(Objects.toString(atomicInt.getAndIncrement()), errors));
-          return failFast
-              ? stream.findFirst().orElse(Errors.none())
-              : stream.reduce(Errors.none(), Errors::plus);
-        };
+  static <A> Validator<Iterable<A>> iter(Validator<? super A> validator) {
+    return (failFast, obj) -> {
+      final var atomicInt = new AtomicInteger(0);
+      final var stream =
+          StreamSupport.stream(obj.spliterator(), false)
+              .map(x -> validator.apply(failFast, x))
+              .map(errors -> Errors.wrapper(Objects.toString(atomicInt.getAndIncrement()), errors));
+      return failFast
+          ? stream.filter(Errors::hasError).findFirst().orElse(Errors.none())
+          : stream.reduce(Errors.none(), Errors::plus);
+    };
   }
 
-  static <A> Validator<A> plus(Validator<A> arg1, Validator<A> arg2) {
-    return (failFast,obj) -> {
-          final var error1 = arg1.apply(failFast, obj);
-          if (failFast && error1 != Errors.none()) return error1;
-          return Errors.plus(error1, arg2.apply(failFast, obj));
-        };
+  static <A> Validator<A> plus(Validator<? super A> validator0, Validator<? super A> validator1) {
+    return (failFast, obj) -> {
+      final var error1 = validator0.apply(failFast, obj);
+      if (failFast && error1 != Errors.none()) return error1;
+      return Errors.plus(error1, validator1.apply(failFast, obj));
+    };
   }
 }

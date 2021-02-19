@@ -3,16 +3,16 @@ package com.github.yjgbg.validation.core;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static com.github.yjgbg.validation.core.Validator.of;
 import static com.github.yjgbg.validation.core.Validator.plus;
 
-public class BaseValidatorExt {
-  public static <A> Validator<A> and(Validator<A> that, Validator<A> another) {
+public class ValidatorStdExt {
+  public static <A> Validator<A> and(Validator<A> that, Validator<? super A> another) {
     return plus(that, another);
   }
 
@@ -35,7 +35,7 @@ public class BaseValidatorExt {
   }
 
   public static <A, B> Validator<A> andIter(
-      Validator<A> that, Getter<A, Iterable<B>> prop, Validator<B> validator) {
+      Validator<A> that, Getter<A, Iterable<B>> prop, Validator<? super B> validator) {
     return plus(that, Validator.wrapper(prop, iter(validator)));
   }
 
@@ -48,14 +48,22 @@ public class BaseValidatorExt {
   }
 
   public static <A> Function<@Nullable A, String> msg(@NotNull String message) {
-    return x -> message.replaceAll("%s", Objects.toString(x));
+    return x -> String.format(message, x, x, x, x, x, x, x, x);
   }
 
-  public static <A> Validator<Iterable<A>> iter(Validator<A> that) {
+  public static <A> Validator<Iterable<A>> iter(Validator<? super A> that) {
     return Validator.iter(that);
   }
 
-  public static <A,B,C> Function<A,Function<B,C>> curried(BiFunction<A,B,C> that) {
-      return failFast -> obj -> that.apply(failFast,obj);
+  public static <A, B, C> BiFunction<B, A, C> reverse(BiFunction<A, B, C> that) {
+    return (b, a) -> that.apply(a, b);
+  }
+
+  public static <A, B, C> Function<B, C> bind(BiFunction<A, B, C> that, A a) {
+    return b -> that.apply(a, b);
+  }
+
+  public static <A,B>Supplier<B> bind(Function<A,B> that,A arg0) {
+      return () -> that.apply(arg0);
   }
 }

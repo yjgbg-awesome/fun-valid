@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /** Error的构建，以及相关运算，包括Error的加法，以及Error与string的运算 */
 @Getter
@@ -46,30 +48,37 @@ public class Errors {
   /**
    * 定义了两个Error的加法
    *
+   * @param errors0
    * @param errors1
-   * @param errors2
    * @return
    */
   @NotNull
   @Contract(pure = true)
-  public static Errors plus(@Nullable final Errors errors1, @Nullable final Errors errors2) {
-    if (errors1 == null) return plus(none(), errors2);
-    if (errors2 == null) return plus(errors1, none());
-    if (errors1 == none()) return errors2;
-    if (errors2 == none()) return errors1;
-    final var reject0 = errors1.getRejectValue();
-    final var reject1 = errors2.getRejectValue();
+  public static Errors plus(@Nullable final Errors errors0, @Nullable final Errors errors1) {
+    if (errors0 == null) return plus(none(), errors1);
+    if (errors1 == null) return plus(errors0, none());
+    if (errors0 == none()) return errors1;
+    if (errors1 == none()) return errors0;
+    final var reject0 = errors0.getRejectValue();
+    final var reject1 = errors1.getRejectValue();
     if (reject0 != reject1)
       throw new IllegalArgumentException(String.format("不同数据对象的校验结果不可相加(%s,%s)", reject0, reject1));
-    final var messages = new HashSet<>(errors1.getMessages());
-    errors2.getMessages().stream().filter(x -> !messages.contains(x)).forEach(messages::add);
-    final var errors = new HashMap<>(errors1.getErrors());
-    errors2.getErrors().forEach((k, v) -> errors.put(k, plus(errors.get(k), v)));
+    final var messages = new HashSet<>(errors0.getMessages());
+    errors1.getMessages().stream().filter(x -> !messages.contains(x)).forEach(messages::add);
+    final var errors = new HashMap<>(errors0.getErrors());
+    errors1.getErrors().forEach((k, v) -> errors.put(k, plus(errors.get(k), v)));
     return new Errors(reject0, messages, errors);
   }
 
   public boolean hasError() {
-    return !Objects.equals(this, none());
+    return this != none();
+  }
+
+  public Errors mapMessage(Function<String,String> mapper) {
+      final var errors1 = messages.stream().map(mapper).map(msg -> Errors.message(rejectValue,msg));
+      final var errors2 = errors.entrySet().stream()
+              .map(entry -> Errors.wrapper(entry.getKey(),entry.getValue().mapMessage(mapper)));
+      return Stream.of(errors1,errors2).flatMap(Function.identity()).reduce(Errors.none(),Errors::plus);
   }
 
   @Override

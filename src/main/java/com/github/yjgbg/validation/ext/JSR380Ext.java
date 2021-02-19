@@ -1,11 +1,11 @@
 package com.github.yjgbg.validation.ext;
 
-import com.github.yjgbg.validation.core.BaseValidatorExt;
 import com.github.yjgbg.validation.core.Getter;
 import com.github.yjgbg.validation.core.Validator;
+import com.github.yjgbg.validation.core.ValidatorStdExt;
 import lombok.experimental.ExtensionMethod;
 
-@ExtensionMethod(BaseValidatorExt.class)
+@ExtensionMethod(ValidatorStdExt.class)
 public class JSR380Ext {
   public static <A> Validator<A> assertTrue(Validator<A> that, Getter<A, Boolean> prop) {
     return that.and(prop, JSR380Validators.assertTrue());
