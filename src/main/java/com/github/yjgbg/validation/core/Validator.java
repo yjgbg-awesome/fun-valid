@@ -23,18 +23,18 @@ public interface Validator<@Nullable A> extends BiFunction<@NotNull Boolean,A,Er
 
   static <A> Validator<A> of(
       Predicate<@Nullable A> predicate, Function<@Nullable A, String> message) {
-    return (failFast, obj) ->
-        predicate.test(obj) ? Errors.none() : Errors.message(obj, message.apply(obj));
+    return (failFast, obj) -> predicate.test(obj) ? Errors.none() : Errors.of(obj, message.apply(obj));
   }
 
   static <A, B> Validator<A> wrapper(
-      Getter<@Nullable A, @Nullable B> prop, Validator<? super B> validator) {
-    return (failFast,obj) ->
-            Errors.wrapper(prop.propertyName(), validator.apply(failFast, obj != null ? prop.apply(obj) : null));
+      Getter<A, @Nullable B> prop, Validator<? super B> validator) {
+    return (failFast, obj) ->
+        Errors.wrapper(
+            prop.propertyName(), validator.apply(failFast, obj != null ? prop.apply(obj) : null));
   }
 
   /**
-   * 将对元素的校验器，转换为对其集合的转换器
+   * 将对元素的校验器，转换为对其集合的校验器
    *
    * @param validator
    * @param <A>

@@ -27,7 +27,8 @@ public class Errors {
   }
 
   @Contract(pure = true)
-  public static Errors message(@Nullable Object rejectValue, @NotNull final String message) {
+  public static Errors of(@Nullable Object rejectValue, @NotNull final String message) {
+    if (rejectValue == null && message.isBlank()) return none();
     return new Errors(rejectValue, Set.of(message), Map.of());
   }
 
@@ -61,24 +62,28 @@ public class Errors {
     if (errors1 == none()) return errors0;
     final var reject0 = errors0.getRejectValue();
     final var reject1 = errors1.getRejectValue();
-    if (reject0 != reject1)
+    if (reject0 != null && reject1 != null && reject0 != reject1)
       throw new IllegalArgumentException(String.format("不同数据对象的校验结果不可相加(%s,%s)", reject0, reject1));
+    // 并集
     final var messages = new HashSet<>(errors0.getMessages());
-    errors1.getMessages().stream().filter(x -> !messages.contains(x)).forEach(messages::add);
+    messages.addAll(errors1.getMessages());
     final var errors = new HashMap<>(errors0.getErrors());
     errors1.getErrors().forEach((k, v) -> errors.put(k, plus(errors.get(k), v)));
-    return new Errors(reject0, messages, errors);
+    return new Errors(reject0 != null ? reject0 : reject1, messages, errors);
   }
 
   public boolean hasError() {
     return this != none();
   }
 
-  public Errors mapMessage(Function<String,String> mapper) {
-      final var errors1 = messages.stream().map(mapper).map(msg -> Errors.message(rejectValue,msg));
-      final var errors2 = errors.entrySet().stream()
-              .map(entry -> Errors.wrapper(entry.getKey(),entry.getValue().mapMessage(mapper)));
-      return Stream.of(errors1,errors2).flatMap(Function.identity()).reduce(Errors.none(),Errors::plus);
+  public Errors mapMessage(Function<String, String> mapper) {
+    final var errors0 = messages.stream().map(mapper).map(msg -> Errors.of(rejectValue, msg));
+    final var errors1 =
+        errors.entrySet().stream()
+            .map(entry -> Errors.wrapper(entry.getKey(), entry.getValue().mapMessage(mapper)));
+    return Stream.of(errors0, errors1)
+        .flatMap(Function.identity())
+        .reduce(Errors.none(), Errors::plus);
   }
 
   @Override

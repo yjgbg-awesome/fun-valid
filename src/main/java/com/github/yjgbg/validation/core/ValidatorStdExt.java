@@ -47,7 +47,7 @@ public class ValidatorStdExt {
     return plus(that, Validator.wrapper(prop, iter(of(predicate, message))));
   }
 
-  public static <A> Function<@Nullable A, String> msg(@NotNull String message) {
+  public static <A> Function<@Nullable A, String> fmt(@NotNull String message) {
     return x -> String.format(message, x, x, x, x, x, x, x, x);
   }
 
@@ -63,7 +63,7 @@ public class ValidatorStdExt {
     return b -> that.apply(a, b);
   }
 
-  public static <A,B>Supplier<B> bind(Function<A,B> that,A arg0) {
-      return () -> that.apply(arg0);
+  public static <A, B> Supplier<B> bind(Function<A, B> that, A a) {
+    return () -> that.apply(a);
   }
 }
