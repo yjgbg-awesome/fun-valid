@@ -21,24 +21,17 @@ public interface Validator<@Nullable A> extends BiFunction<@NotNull Boolean,A,Er
     return (failFast,obj) -> Errors.none();
   }
 
-  static <A> Validator<A> of(
-      Predicate<@Nullable A> predicate, Function<@Nullable A, String> message) {
+  static <A> Validator<A> of(Predicate<@Nullable A> predicate, Function<@Nullable A, String> message) {
     return (failFast, obj) -> predicate.test(obj) ? Errors.none() : Errors.of(obj, message.apply(obj));
   }
 
-  static <A, B> Validator<A> wrapper(
-      Getter<A, @Nullable B> prop, Validator<? super B> validator) {
+  static <A, B> Validator<A> wrapper(Getter<A, @Nullable B> prop, Validator<? super B> validator) {
     return (failFast, obj) ->
-        Errors.wrapper(
-            prop.propertyName(), validator.apply(failFast, obj != null ? prop.apply(obj) : null));
+        Errors.wrapper(prop.propertyName(), validator.apply(failFast, obj != null ? prop.apply(obj) : null));
   }
 
   /**
    * 将对元素的校验器，转换为对其集合的校验器
-   *
-   * @param validator
-   * @param <A>
-   * @return
    */
   static <A> Validator<Iterable<A>> iter(Validator<? super A> validator) {
     return (failFast, obj) -> {
@@ -53,6 +46,9 @@ public interface Validator<@Nullable A> extends BiFunction<@NotNull Boolean,A,Er
     };
   }
 
+  /**
+   * 校验器相加
+   */
   static <A> Validator<A> plus(Validator<? super A> validator0, Validator<? super A> validator1) {
     return (failFast, obj) -> {
       final var error1 = validator0.apply(failFast, obj);
