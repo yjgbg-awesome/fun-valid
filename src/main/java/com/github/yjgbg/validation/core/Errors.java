@@ -27,7 +27,7 @@ public class Errors {
 	}
 
 	@Contract(pure = true)
-	public static Errors of(@Nullable Object rejectValue, @NotNull final String message) {
+	public static Errors of(@Nullable final Object rejectValue, @NotNull final String message) {
 		if (rejectValue == null && message.isBlank()) return none();
 		return new Errors(rejectValue, Set.of(message), Map.of());
 	}

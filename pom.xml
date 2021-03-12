@@ -7,22 +7,9 @@
     <groupId>com.github.yjgbg</groupId>
     <artifactId>yjgbg-valid</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>jpa-plus-spring-boot-starter</name>
-    <description>spring-data-jpa加强</description>
-    <url>https://github.com/yjgbg/jpa-plus-spring-boot-starter</url>
-    <licenses>
-        <license>
-            <name>The MIT License</name>
-            <url>https://raw.githubusercontent.com/yjgbg/jpa-plus-spring-boot-starter/master/LICENSE</url>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <name>yjgbg</name>
-            <email>yjgbg1239461052@gmail.com</email>
-            <url>https://github.com/yjgbg</url>
-        </developer>
-    </developers>
+    <name>yjgbg-valid</name>
+    <description>yjgbg-valid</description>
+    <url>https://github.com/yjgbg/yjgbg-valid</url>
     <scm>
         <url>https://github.com/yjgbg/jpa-plus-spring-boot-starter.git</url>
         <connection>https://github.com/yjgbg/jpa-plus-spring-boot-starter.git</connection>
@@ -40,7 +27,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>1.18.18</version>
         </dependency>
     </dependencies>
     <build>

@@ -3,7 +3,10 @@ package com.github.yjgbg.validation.core;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -56,19 +59,19 @@ public class ValidatorStdExt {
 		return Validator.iter(that);
 	}
 
-	public static Map<String,Set<String>> output(Errors errors) {
-		var res = output0(errors);
+	public static Map<String,Set<String>> toMessageMap(Errors errors) {
+		var res = toMessageMap0(errors);
 		return res.entrySet().stream()
 				.collect(Collectors.toMap(x -> x.getKey().isBlank() ? "__self__":x.getKey(), Map.Entry::getValue));
 	}
 
-	private static Map<String, Set<String>> output0(Errors errors) {
+	private static Map<String, Set<String>> toMessageMap0(Errors errors) {
 		final var map1 = errors.getMessages().isEmpty()
 				? Map.<String,Set<String>>of()
 				: Map.of("", errors.getMessages());
 		if (errors.getFieldErrors().isEmpty()) return map1;
 		final var map2 = errors.getFieldErrors().entrySet().stream()
-				.flatMap(entry -> output0(entry.getValue()).entrySet().stream().map(x -> new AbstractMap.SimpleImmutableEntry<>(x.getKey().isBlank() ? entry.getKey() : entry.getKey() + "." + x.getKey(),x.getValue())))
+				.flatMap(entry -> toMessageMap0(entry.getValue()).entrySet().stream().map(x -> new AbstractMap.SimpleImmutableEntry<>(x.getKey().isBlank() ? entry.getKey() : entry.getKey() + "." + x.getKey(),x.getValue())))
 				.filter(entry -> !entry.getValue().isEmpty())
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 		final var res = new HashMap<>(map1);
