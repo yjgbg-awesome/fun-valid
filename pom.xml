@@ -11,8 +11,8 @@
     <description>yjgbg-valid</description>
     <url>https://github.com/yjgbg/yjgbg-valid</url>
     <scm>
-        <url>https://github.com/yjgbg/jpa-plus-spring-boot-starter.git</url>
-        <connection>https://github.com/yjgbg/jpa-plus-spring-boot-starter.git</connection>
+        <url>https://github.com/yjgbg/yjgbg-valid.git</url>
+        <connection>https://github.com/yjgbg/yjgbg-valid.git</connection>
         <developerConnection>https://github.com/yjgbg</developerConnection>
     </scm>
     <properties>
