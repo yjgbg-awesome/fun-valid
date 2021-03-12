@@ -3,7 +3,7 @@ package com.github.yjgbg.validation.core;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -71,7 +71,11 @@ public class ValidatorStdExt {
 				: Map.of("", errors.getMessages());
 		if (errors.getFieldErrors().isEmpty()) return map1;
 		final var map2 = errors.getFieldErrors().entrySet().stream()
-				.flatMap(entry -> toMessageMap0(entry.getValue()).entrySet().stream().map(x -> new AbstractMap.SimpleImmutableEntry<>(x.getKey().isBlank() ? entry.getKey() : entry.getKey() + "." + x.getKey(),x.getValue())))
+				.flatMap(entry -> toMessageMap0(entry.getValue()).entrySet().stream()
+						.map(x -> new SimpleImmutableEntry<>(
+								x.getKey().isBlank() ? entry.getKey() : entry.getKey() + "." + x.getKey(),
+								x.getValue())
+						))
 				.filter(entry -> !entry.getValue().isEmpty())
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 		final var res = new HashMap<>(map1);
