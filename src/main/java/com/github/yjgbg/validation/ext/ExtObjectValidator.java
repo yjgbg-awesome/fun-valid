@@ -1,8 +1,8 @@
 package com.github.yjgbg.validation.ext;
 
+import com.github.yjgbg.validation.core.ExtStdValidator;
 import com.github.yjgbg.validation.core.Getter;
 import com.github.yjgbg.validation.core.Validator;
-import com.github.yjgbg.validation.core.ValidatorStdExt;
 import lombok.experimental.ExtensionMethod;
 
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Function;
 
-@ExtensionMethod({ValidatorStdExt.class})
+@ExtensionMethod({ExtStdValidator.class})
 public class ExtObjectValidator {
 	public static <A, B> Validator<A>
 	equal(Validator<A> that, Getter<A, B> prop, B value, Function<B, String> message) {

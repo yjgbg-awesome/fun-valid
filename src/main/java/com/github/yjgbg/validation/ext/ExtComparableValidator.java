@@ -1,13 +1,13 @@
 package com.github.yjgbg.validation.ext;
 
+import com.github.yjgbg.validation.core.ExtStdValidator;
 import com.github.yjgbg.validation.core.Getter;
 import com.github.yjgbg.validation.core.Validator;
-import com.github.yjgbg.validation.core.ValidatorStdExt;
 import lombok.experimental.ExtensionMethod;
 
 import java.util.function.Function;
 
-@ExtensionMethod(ValidatorStdExt.class)
+@ExtensionMethod(ExtStdValidator.class)
 public class ExtComparableValidator {
 	public static <A, B extends Comparable<B>> Validator<A>
 	littleThan(Validator<A> that, Getter<A, B> prop, B upperBound, Function<B, String> message) {

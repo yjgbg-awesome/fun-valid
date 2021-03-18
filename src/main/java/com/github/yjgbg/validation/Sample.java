@@ -1,10 +1,10 @@
 package com.github.yjgbg.validation;
 
+import com.github.yjgbg.validation.core.ExtStdValidator;
 import com.github.yjgbg.validation.core.Validator;
-import com.github.yjgbg.validation.core.ValidatorStdExt;
-import com.github.yjgbg.validation.ext.CharSequenceValidatorExt;
-import com.github.yjgbg.validation.ext.ComparableValidatorExt;
-import com.github.yjgbg.validation.ext.ObjectValidatorExt;
+import com.github.yjgbg.validation.ext.ExtCharSequenceValidator;
+import com.github.yjgbg.validation.ext.ExtComparableValidator;
+import com.github.yjgbg.validation.ext.ExtObjectValidator;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@ExtensionMethod({ValidatorStdExt.class, ObjectValidatorExt.class, ComparableValidatorExt.class,
-		CharSequenceValidatorExt.class})
+@ExtensionMethod({ExtStdValidator.class, ExtObjectValidator.class, ExtComparableValidator.class,
+		ExtCharSequenceValidator.class})
 public class Sample {
 	public static void main(String[] args) {
 		final var entity0 = new Entity1("null", 0L, true, Collections.emptyList());
