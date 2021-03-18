@@ -8,7 +8,7 @@ import lombok.experimental.ExtensionMethod;
 import java.util.function.Function;
 
 @ExtensionMethod(ValidatorStdExt.class)
-public class ComparableValidatorExt {
+public class ExtComparableValidator {
 	public static <A, B extends Comparable<B>> Validator<A>
 	littleThan(Validator<A> that, Getter<A, B> prop, B upperBound, Function<B, String> message) {
 		return that.and(prop, message, x -> x != null && x.compareTo(upperBound) < 0);

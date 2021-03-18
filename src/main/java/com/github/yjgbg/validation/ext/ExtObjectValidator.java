@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 @ExtensionMethod({ValidatorStdExt.class})
-public class ObjectValidatorExt {
+public class ExtObjectValidator {
 	public static <A, B> Validator<A>
 	equal(Validator<A> that, Getter<A, B> prop, B value, Function<B, String> message) {
 		return that.and(prop, message, x -> Objects.equals(x, value));
