@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @ExtensionMethod({ExtStdValidator.class, ExtObjectValidator.class, ExtComparableValidator.class,
 		ExtCharSequenceValidator.class})
@@ -23,13 +24,16 @@ public class Sample {
 		final var entity1 = new Entity1(null, 0L, false, Collections.emptyList());
 		final var entity2 = new Entity1("null", 0L, false, Arrays.asList(entity0, entity1, entity1));
 		final var baseValidator = Validator.<Entity1>none()
-				.nonNull("对象为空:%s")
-				.equal(Entity1::getField3, false, "field3应该为false,但其值为%s".fmt())
-				.nonNull(Entity1::getField1, "field1不得为null")
-//				.and(Entity1::getField1,"已存在field1为%s的记录".fmt(),f1 -> !dao().spec().in(Entity1::getField1,f1).exist())
-				.regexp(Entity1::getField1,true,"1","value is wrong".fmt())
-				.inRange(Entity1::getField2, 1L, 3L, "field2应该介于1-3之间，但其值却为%s".fmt());
-		final var validator = baseValidator.andIter(Entity1::getField4, baseValidator);
+				.and("obj不能为空".fmt(), Objects::nonNull)
+//				.nonNull("obj不能为空")
+				.and(Entity1::getBooleanField,"field3应该为false,但其值为%s".fmt(),b -> Objects.equals(b,false))
+//				.equal(Entity1::getBooleanField, false, "field3应该为false,但其值为%s".fmt())
+				.and(Entity1::getStringField,"field1不得为null".fmt(),Objects::nonNull)
+//				.nonNull(Entity1::getStringField, "field1不得为null")
+				.and(Entity1::getStringField,"已存在field1为%s的记录".fmt(),f1 -> true)
+				.regexp(Entity1::getStringField,true,"someregex","value is wrong".fmt())
+				.inRange(Entity1::getLongField, 1L, 3L, "field2应该介于1-3之间，但其值却为%s".fmt());
+		final var validator = baseValidator.andIter(Entity1::getListField, baseValidator);
 		final var errors1 = validator.failFastApply(entity2);
 		System.out.println(errors1.toMessageMap());
 	}
@@ -39,8 +43,8 @@ public class Sample {
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class Entity1 {
-	String field1;
-	Long field2;
-	Boolean field3;
-	List<Entity1> field4;
+	String stringField;
+	Long longField;
+	Boolean booleanField;
+	List<Entity1> listField;
 }
