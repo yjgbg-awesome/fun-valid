@@ -1,31 +1,17 @@
 package com.github.yjgbg.validation.core;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class LbkExtStdValidator {
-	public static <A> Errors failFastApply(Validator<A> that, A obj) {
-		return that.apply(true, obj);
-	}
-
-	public static <A> Errors noFailFastApply(Validator<A> that, A obj) {
-		return that.apply(false, obj);
-	}
-
-	public static <A> Validator<A> and(Validator<A> that, Validator<? super A> another) {
-		return Validator.plus(that, another);
-	}
-
 	public static <A> Validator<A>
-	and(Validator<A> that, Function<@Nullable A, String> message, Predicate<@Nullable A> predicate) {
+	and(Validator<A> that, String message, Predicate<@Nullable A> predicate) {
 		return Validator.plus(that, Validator.of(predicate, message));
 	}
 
@@ -34,9 +20,8 @@ public class LbkExtStdValidator {
 		return Validator.plus(that, Validator.wrapper(prop, another));
 	}
 
-	public static <A, B> Validator<A>
-	and(Validator<A> that, Getter<A, B> prop, Function<@Nullable B, String> message,
-	    Predicate<@Nullable B> predicate) {
+	public static <A, B> Validator<A> and(Validator<A> that, Getter<A, B> prop, String message,
+	                                      Predicate<@Nullable B> predicate) {
 		return Validator.plus(that, Validator.wrapper(prop, Validator.of(predicate, message)));
 	}
 
@@ -46,13 +31,8 @@ public class LbkExtStdValidator {
 	}
 
 	public static <A, B> Validator<A>
-	andIter(Validator<A> that, Getter<A, Iterable<B>> prop,
-	        Function<@Nullable B, String> message, Predicate<@Nullable B> predicate) {
+	andIter(Validator<A> that, Getter<A, Iterable<B>> prop, String message, Predicate<@Nullable B> predicate) {
 		return Validator.plus(that, Validator.wrapper(prop, Validator.iter(Validator.of(predicate, message))));
-	}
-
-	public static <A> Function<@Nullable A, String> fmt(@NotNull String message) {
-		return x -> String.format(message, x, x, x, x, x, x, x, x);
 	}
 
 	public static <A> Validator<Iterable<A>> iter(Validator<? super A> that) {
