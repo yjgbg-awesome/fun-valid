@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class ExtStdValidator {
+public class LbkExtStdValidator {
 	public static <A> Errors failFastApply(Validator<A> that, A obj) {
 		return that.apply(true, obj);
 	}

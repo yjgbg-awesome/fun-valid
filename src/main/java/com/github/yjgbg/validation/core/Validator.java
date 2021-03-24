@@ -16,7 +16,7 @@ import java.util.stream.StreamSupport;
  * @param <A>
  */
 @FunctionalInterface
-public interface Validator<@Nullable A> extends BiFunction<@NotNull Boolean,A,Errors> {
+public interface Validator<@Nullable A> extends BiFunction<@NotNull Boolean,@Nullable A,Errors> {
   static <A> Validator<A> none() {
     return (failFast,obj) -> Errors.none();
   }
@@ -35,6 +35,7 @@ public interface Validator<@Nullable A> extends BiFunction<@NotNull Boolean,A,Er
    */
   static <A> Validator<Iterable<A>> iter(Validator<? super A> validator) {
     return (failFast, obj) -> {
+    	if (obj==null) return Errors.none();
       final var atomicInt = new AtomicInteger(0);
       final var stream =
           StreamSupport.stream(obj.spliterator(), false)
