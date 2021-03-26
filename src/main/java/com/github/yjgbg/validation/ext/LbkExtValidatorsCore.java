@@ -1,5 +1,8 @@
-package com.github.yjgbg.validation.core;
+package com.github.yjgbg.validation.ext;
 
+import com.github.yjgbg.validation.core.Errors;
+import com.github.yjgbg.validation.core.Getter;
+import com.github.yjgbg.validation.core.Validator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
@@ -9,7 +12,10 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class LbkExtStdValidator {
+/**
+ * 核心扩展类
+ */
+public class LbkExtValidatorsCore {
 	public static <A> Validator<A>
 	and(Validator<A> that, String message, Predicate<@Nullable A> predicate) {
 		return Validator.plus(that, Validator.of(predicate, message));

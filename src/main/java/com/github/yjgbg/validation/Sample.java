@@ -1,10 +1,8 @@
 package com.github.yjgbg.validation;
 
-import com.github.yjgbg.validation.core.LbkExtStdValidator;
 import com.github.yjgbg.validation.core.Validator;
-import com.github.yjgbg.validation.ext.LbkExtObjectValidator;
-import com.github.yjgbg.validation.ext.LbkExtStringValidator;
-import com.github.yjgbg.validation.ext.LbkExtComparableValidator;
+import com.github.yjgbg.validation.ext.LbkExtValidatorsCore;
+import com.github.yjgbg.validation.ext.LbkExtValidatorsStd;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -14,36 +12,47 @@ import lombok.experimental.FieldDefaults;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-@ExtensionMethod({LbkExtStdValidator.class, LbkExtObjectValidator.class,
-		LbkExtStringValidator.class, LbkExtComparableValidator.class})
+@ExtensionMethod({LbkExtValidatorsCore.class, LbkExtValidatorsStd.class})
 public class Sample {
 	public static void main(String[] args) {
-		final var entity0 = new Entity1("null", 0L, true,null);
-		final var entity1 = new Entity1("null", 0L, false, entity0);
-		final var validator0 = Validator.<Entity1>none()
-				.and("obj不能为空", Objects::nonNull)
-				.and(Entity1::getBooleanField,"field3应该为false,但其值为%s",b -> Objects.equals(b,false))
-				.and(Entity1::getStringField,"field1不得为null",Objects::nonNull)
-				.and(Entity1::getStringField,"value is wrong",x -> x == null || Pattern.matches("someregex",x))
-				.and(Entity1::getLongField,  "field2应该介于1-3之间，但其值却为%s",x -> x != null && x == 2);
-//		final var validator0 =Validator.<Entity1>none()
-//				.nonNull("obj不能为空")
-//				.equal(Entity1::getBooleanField,"field3应该为false,但其值为%s",false)
-//				.nonNull(Entity1::getStringField,"field1不得为null")
-//				.regexp(Entity1::getStringField,"value is wrong",true,"someregex")
-//				.between(Entity1::getLongField,"field2应该介于1-3之间，但其值却为%s",1L,3L);
-		final var validator1 = validator0.and(Entity1::getEntity1Field,validator0);
-		final var errors2 = validator1.apply(true,entity1);
-		System.out.println(errors2.toMessageMap());
+		final var entity0 = new Person("null", 0L, Gender.MALE,"12345678910","asd@qq.com");
+		final var entity1 = new Person("null", 0L, Gender.FEMALE,"12345678910","asd@qq.com");
+		final var validator0 = Validator.<Person>none()
+				.and("person不能为空", Objects::nonNull)
+				.and(Person::getId,"id应该大于0", id -> id!=null && id > 0L)
+				.and(Person::getName,"name应该是2-5个字",name -> name!=null && name.length() >= 2 && name.length() <5)
+				.and(Person::getGender,"应该是男性",gender -> Objects.equals(gender,Gender.MALE))
+				.and(Person::getPhone,"电话号码应该为11位数字", x ->
+						x == null || Pattern.matches("^\\d{11}$",x))
+				.and(Person::getEmail,  "email格式非法", x ->
+						x != null && Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$",x));
+		final var validator1 =Validator.<Person>none()
+				.nonNull("person不能为空")
+				.gt(Person::getId,"id应该大于0，不应该是%s",0L)
+				.length(Person::getName,"name应该是2-5个字",2,5)
+				.equal(Person::getGender,"应该是男性",Gender.MALE)
+				.regexp(Person::getPhone,"电话号码不合法",
+						true, "^\\d{11}$")
+				.regexp(Person::getEmail,"email不合法",
+						false, "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
+		final var errors0 = validator0.apply(false,entity0);
+		final var errors1 = validator1.apply(true,entity1);
+		System.out.println(errors0.toMessageMap());
+		System.out.println(errors1.toMessageMap());
 	}
 }
 
 @Data
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-class Entity1 {
-	String stringField;
-	Long longField;
-	Boolean booleanField;
-	Entity1 entity1Field;
+class Person {
+	String name;
+	Long id;
+	Gender gender;
+	String phone;
+	String email;
+}
+
+enum Gender{
+	MALE,FEMALE
 }
