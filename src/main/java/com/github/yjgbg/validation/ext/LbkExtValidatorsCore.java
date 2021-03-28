@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 public class LbkExtValidatorsCore {
 	public static <A> Validator<A>
 	and(Validator<A> that, String message, Predicate<@Nullable A> predicate) {
-		return Validator.plus(that, Validator.of(predicate, message));
+		return Validator.plus(that, Validator.of(predicate, x -> message.replaceAll("%s", Objects.toString(x))));
 	}
 
 
@@ -28,7 +29,7 @@ public class LbkExtValidatorsCore {
 
 	public static <A, B> Validator<A> and(Validator<A> that, Getter<A, B> prop, String message,
 	                                      Predicate<@Nullable B> predicate) {
-		return Validator.plus(that, Validator.wrapper(prop, Validator.of(predicate, message)));
+		return Validator.plus(that, Validator.wrapper(prop, Validator.of(predicate, x -> message.replaceAll("%s", Objects.toString(x)))));
 	}
 
 	public static <A, B> Validator<A>
@@ -38,7 +39,8 @@ public class LbkExtValidatorsCore {
 
 	public static <A, B> Validator<A>
 	andIter(Validator<A> that, Getter<A, Iterable<B>> prop, String message, Predicate<@Nullable B> predicate) {
-		return Validator.plus(that, Validator.wrapper(prop, Validator.iter(Validator.of(predicate, message))));
+		return Validator.plus(that, Validator.wrapper(prop, Validator.iter(Validator.of(predicate,
+				x -> message.replaceAll("%s", Objects.toString(x))))));
 	}
 
 	public static <A> Validator<Iterable<A>> iter(Validator<? super A> that) {

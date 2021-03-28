@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
@@ -20,8 +21,8 @@ public interface Validator<@Nullable A> extends BiFunction<@NotNull Boolean,@Nul
     return (failFast,obj) -> Errors.none();
   }
 
-  static <A> Validator<A> of(Predicate<@Nullable A> predicate, String message) {
-    return (failFast, obj) -> predicate.test(obj) ? Errors.none() : Errors.of(obj, message);
+  static <A> Validator<A> of(Predicate<@Nullable A> predicate, Function<A,String> message) {
+    return (failFast, obj) -> predicate.test(obj) ? Errors.none() : Errors.of(obj, message.apply(obj));
   }
 
   static <A, B> Validator<A> wrapper(Getter<A, @Nullable B> prop, Validator<? super B> validator) {
