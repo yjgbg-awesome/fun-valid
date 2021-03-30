@@ -1,5 +1,7 @@
 package com.github.yjgbg.validation.core;
 
+import io.vavr.collection.HashMap;
+import io.vavr.collection.HashSet;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +10,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-
 /**
  * Error的构建，以及相关运算，包括Error的加法，以及Error与string的运算
  */
@@ -17,10 +17,10 @@ import java.util.*;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Errors {
-	private static final Errors NONE = new Errors(null, Set.of(), Map.of());
+	private static final Errors NONE = new Errors(null, HashSet.empty(),HashMap.empty());
 	Object rejectValue;
-	Set<String> messages;
-	Map<String, Errors> fieldErrors;
+	HashSet<String> messages;
+	HashMap<String, Errors> fieldErrors;
 
 	/**
 	 * 空错误
@@ -37,7 +37,7 @@ public class Errors {
 	@Contract(pure = true)
 	public static Errors simple(@Nullable final Object rejectValue, @NotNull final String message) {
 		if (rejectValue == null && message.isBlank()) return none();
-		return new Errors(rejectValue, Set.of(message), Map.of());
+		return new Errors(rejectValue, HashSet.of(message),HashMap.empty());
 	}
 
 	/**
@@ -56,11 +56,13 @@ public class Errors {
 		if (reject0 != null && reject1 != null && reject0 != reject1)
 			throw new IllegalArgumentException(String.format("不同数据对象的校验结果不可相加(%s,%s)", reject0, reject1));
 		// 并集
-		final var messages = new HashSet<>(errors0.getMessages());
-		messages.addAll(errors1.getMessages());
-		final var errors = new HashMap<>(errors0.getFieldErrors());
-		errors1.getFieldErrors().forEach((k, v) -> errors.put(k, plus(errors.get(k), v)));
-		return new Errors(reject0 != null ? reject0 : reject1, messages, errors);
+		final var messages0 = errors0.getMessages();
+		final var messages1 = errors1.getMessages();
+		final var messages = messages0.union(messages1);
+		final var fieldErrors0 = errors0.getFieldErrors();
+		final var fieldErrors1 = errors1.getFieldErrors();
+		final var fieldErrors = fieldErrors0.merge(fieldErrors1,Errors::plus);
+		return new Errors(reject0 != null ? reject0 : reject1, messages, fieldErrors);
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class Errors {
 	public static Errors transform(@NotNull final String key, @Nullable final Errors errors) {
 		if (errors == null) return none();
 		if (errors == none()) return none();
-		return new Errors(null, Collections.emptySet(), Map.of(key, errors));
+		return new Errors(null, HashSet.empty(), HashMap.of(key, errors));
 	}
 
 	public boolean hasError() {

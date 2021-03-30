@@ -9,9 +9,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
-
+// 使用ExtensionMethod注解引入这两个扩展类
 @ExtensionMethod({LbkExtValidatorsCore.class, LbkExtValidatorsStd.class})
 public class Sample {
 	public static void main(String[] args) {
@@ -19,7 +21,15 @@ public class Sample {
 		v1();
 	}
 	private static void v0() {
-		final var entity0 = new Person("l", 0L, Gender.MALE,"12345678910","abc@def.com");
+		// 创建两个实体
+		final var entity0 = new Person("l", 0L, Gender.MALE,
+				"12345678910","abc@def.com",null);
+		final var entity1 = new Person("l", 0L, Gender.MALE,
+				"12345678910","abc@def.com", Collections.singletonList(entity0));
+		//创建两个校验器
+		// validator0校验id,name,gender,phone,email这几个字段
+		// message 可以使用%s取值被校验的字段
+		// constraint 校验规则
 		final var validator0 = Validator.<Person>none()
 				.and("person不能为空", Objects::nonNull)
 				.and(Person::getId,"id应该大于0,而不是%s", id -> id!=null && id > 0L)
@@ -28,12 +38,16 @@ public class Sample {
 				.and(Person::getPhone,"电话号码应该为11位数字", x -> x == null || Pattern.matches("^\\d{11}$",x))
 				.and(Person::getEmail,  "email格式非法", x ->
 						x != null && Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$",x));
+		final var validator1 = validator0.andIter(Person::getChildren,validator0);
 		final var errors0 = validator0.apply(false,entity0);
+		// 第一个参数为是否开启快速校验（在第一个校验错误出现的时候，直接跳过后续校验）
+		final var errors1 = validator1.apply(false,entity1);
 		System.out.println(errors0.toMessageMap());
+		System.out.println(errors1.toMessageMap());
 	}
 
 	public static void v1(){
-		final var entity1 = new Person("null", 0L, Gender.FEMALE,"1234567891011","asdqq.com");
+		final var entity1 = new Person("null", 0L, Gender.FEMALE,"1234567891011","asdqq.com",null);
 		final var validator1 =Validator.<Person>none()
 				.nonNull("person不能为空")
 				.gt(Person::getId,"id应该大于0",0L)
@@ -56,6 +70,7 @@ class Person {
 	Gender gender;
 	String phone;
 	String email;
+	List<Person> children;
 }
 
 enum Gender{
