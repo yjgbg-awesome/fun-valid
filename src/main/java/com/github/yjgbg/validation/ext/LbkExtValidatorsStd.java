@@ -11,36 +11,53 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
- * 常用的Validator扩展类
+ * 常用的Validator扩展函数
  */
 @ExtensionMethod(LbkExtValidatorsCore.class)
 public class LbkExtValidatorsStd {
 	/**
 	 * for object
 	 * */
-	public static <A, B> Validator<A> equal(Validator<A> that, Getter<A, B> prop, String message, B value) {
+	public static <A, B> Validator<A>
+	equal(Validator<A> that, Getter<A, B> prop, String message, B value) {
 		return that.and(prop, message, x -> Objects.equals(x, value));
 	}
 
+	public static <A, B> Validator<A>
+	in(Validator<A> that, Getter<A, B> prop, String message, Collection<? super B> values) {
+		return that.and(prop, message, values::contains);
+	}
+
 	@SafeVarargs
-	public static <A, B> Validator<A> in(Validator<A> that, Getter<A, B> prop, String message, B... values) {
+	public static <A, B> Validator<A>
+	in(Validator<A> that, Getter<A, B> prop, String message, B... values) {
 		return that.and(prop, message, x -> Arrays.asList(values).contains(x));
 	}
 
+
+	public static <A, B> Validator<A>
+	notIn(Validator<A> that, Getter<A, B> prop, String message, Collection<? super B> values) {
+		return that.and(prop, message, x -> !values.contains(x));
+	}
+
 	@SafeVarargs
-	public static <A, B> Validator<A> notIn(Validator<A> that, Getter<A, B> prop, String message, B... value) {
+	public static <A, B> Validator<A>
+	notIn(Validator<A> that, Getter<A, B> prop, String message, B... value) {
 		return that.and(prop, message, x -> !Arrays.asList(value).contains(x));
 	}
 
-	public static <A> Validator<A> nonNull(Validator<A> that, String message) {
+	public static <A> Validator<A>
+	nonNull(Validator<A> that, String message) {
 		return that.and(message, Objects::nonNull);
 	}
 
-	public static <A, B> Validator<A> nonNull(Validator<A> that, Getter<A, B> prop, String message) {
+	public static <A, B> Validator<A>
+	nonNull(Validator<A> that, Getter<A, B> prop, String message) {
 		return that.and(prop, message, Objects::nonNull);
 	}
 
-	public static <A, B> Validator<A> isNull(Validator<A> that, Getter<A, B> prop, String message) {
+	public static <A, B> Validator<A>
+	isNull(Validator<A> that, Getter<A, B> prop, String message) {
 		return that.and(prop, message, Objects::isNull);
 	}
 

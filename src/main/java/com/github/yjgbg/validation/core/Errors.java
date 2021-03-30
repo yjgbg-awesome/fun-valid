@@ -22,28 +22,27 @@ public class Errors {
 	Set<String> messages;
 	Map<String, Errors> fieldErrors;
 
+	/**
+	 * 空错误
+	 * 表示没有错
+	 */
 	public static Errors none() {
 		return NONE;
 	}
 
+	/**
+	 * 简单错误
+	 * 由rejectValue和message组成的简单错误
+	 */
 	@Contract(pure = true)
-	public static Errors of(@Nullable final Object rejectValue, @NotNull final String message) {
+	public static Errors simple(@Nullable final Object rejectValue, @NotNull final String message) {
 		if (rejectValue == null && message.isBlank()) return none();
 		return new Errors(rejectValue, Set.of(message), Map.of());
 	}
 
 	/**
-	 * 定义了与字符串的wrapper运算
-	 */
-	@Contract(pure = true)
-	public static Errors wrapper(@NotNull final String key, @Nullable final Errors errors) {
-		if (errors == null) return none();
-		if (errors == none()) return none();
-		return new Errors(null, Collections.emptySet(), Map.of(key, errors));
-	}
-
-	/**
-	 * 定义了两个Error的加法
+	 * A类复杂错误
+	 * 由两个错误相加而成，对应字段相加
 	 */
 	@NotNull
 	@Contract(pure = true)
@@ -62,6 +61,17 @@ public class Errors {
 		final var errors = new HashMap<>(errors0.getFieldErrors());
 		errors1.getFieldErrors().forEach((k, v) -> errors.put(k, plus(errors.get(k), v)));
 		return new Errors(reject0 != null ? reject0 : reject1, messages, errors);
+	}
+
+	/**
+	 * B类复杂错误
+	 * 根据一个fieldError以及field名，构造一个实体Error
+	 */
+	@Contract(pure = true)
+	public static Errors transform(@NotNull final String key, @Nullable final Errors errors) {
+		if (errors == null) return none();
+		if (errors == none()) return none();
+		return new Errors(null, Collections.emptySet(), Map.of(key, errors));
 	}
 
 	public boolean hasError() {
