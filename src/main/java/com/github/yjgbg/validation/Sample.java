@@ -31,7 +31,7 @@ public class Sample {
 		// message 可以使用%s取值被校验的字段
 		// constraint 校验规则
 		final var validator0 = Validator.<Person>none()
-				.and("person不能为空", Objects::nonNull)
+				.and("person为空", Objects::isNull)
 				.and(Person::getId,"id应该大于0,而不是%s", id -> id!=null && id > 0L)
 				.and(Person::getName,"name应该是2-5个字",name -> name!=null && name.length() >= 2 && name.length() <5)
 				.and(Person::getGender,"应该是男性",gender -> Objects.equals(gender,Gender.MALE))
