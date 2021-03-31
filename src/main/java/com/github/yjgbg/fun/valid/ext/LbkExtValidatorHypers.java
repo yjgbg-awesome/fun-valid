@@ -1,6 +1,6 @@
-package com.github.yjgbg.validation.ext;
+package com.github.yjgbg.fun.valid.ext;
 
-import com.github.yjgbg.validation.core.Errors;
+import com.github.yjgbg.fun.valid.core.Errors;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import lombok.AccessLevel;

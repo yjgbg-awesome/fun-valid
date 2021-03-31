@@ -1,8 +1,8 @@
-package com.github.yjgbg.validation.ext;
+package com.github.yjgbg.fun.valid.ext;
 
-import com.github.yjgbg.validation.core.Errors;
-import com.github.yjgbg.validation.core.Getter;
-import com.github.yjgbg.validation.core.Validator;
+import com.github.yjgbg.fun.valid.core.Errors;
+import com.github.yjgbg.fun.valid.core.Getter;
+import com.github.yjgbg.fun.valid.core.Validator;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
 import org.jetbrains.annotations.NotNull;

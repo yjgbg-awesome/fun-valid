@@ -1,9 +1,9 @@
-package com.github.yjgbg.validation;
+package com.github.yjgbg.fun.valid;
 
-import com.github.yjgbg.validation.core.Validator;
-import com.github.yjgbg.validation.ext.LbkExtValidatorHypers;
-import com.github.yjgbg.validation.ext.LbkExtValidatorsCore;
-import com.github.yjgbg.validation.ext.LbkExtValidatorsStd;
+import com.github.yjgbg.fun.valid.core.Validator;
+import com.github.yjgbg.fun.valid.ext.LbkExtValidatorHypers;
+import com.github.yjgbg.fun.valid.ext.LbkExtValidatorsCore;
+import com.github.yjgbg.fun.valid.ext.LbkExtValidatorsStd;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

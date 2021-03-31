@@ -1,4 +1,4 @@
-package com.github.yjgbg.validation.core;
+package com.github.yjgbg.fun.valid.core;
 
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
