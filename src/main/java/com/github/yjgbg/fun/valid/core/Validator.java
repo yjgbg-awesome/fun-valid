@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Validator接口,以及Validator之间的运算
@@ -15,7 +16,15 @@ import java.util.function.Function;
  * @param <A>
  */
 @FunctionalInterface
-public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nullable A, Errors> {
+public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nullable A, Errors>, Predicate<A> {
+	@Override
+	Errors apply(@NotNull Boolean failFast, @Nullable A a);
+
+	@Override
+	default boolean test(A a) {
+		return !apply(true,a).hasError();
+	}
+
 	/**
 	 * 空校验器
 	 * 构造一个校验结果恒为空的校验器
