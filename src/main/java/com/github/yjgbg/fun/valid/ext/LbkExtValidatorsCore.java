@@ -61,12 +61,14 @@ public class LbkExtValidatorsCore {
 	}
 
 	private static final String SELF = "_self";
-
+	private static final String SEPARATOR = ".";
 	public static Map<String, Set<String>> toMessageMap(Errors errors) {
 		final Map<String, Set<String>> messages = errors.getMessages().isEmpty()
 				? Map() : Map(SELF, errors.getMessages());
 		final var fieldErrors = errors.getFieldErrors()
-				.flatMap((k, v) -> toMessageMap(v).mapKeys(x -> Objects.equals(x, SELF) ? k : k + "." + x));
+				.flatMap((field, error) -> toMessageMap(error)
+						.mapKeys(subField -> Objects.equals(subField, SELF) ? field : field + SEPARATOR + subField)
+				);
 		return messages.merge(fieldErrors, Set::union);
 	}
 }
