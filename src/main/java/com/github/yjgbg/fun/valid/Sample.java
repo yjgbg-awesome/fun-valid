@@ -1,7 +1,6 @@
 package com.github.yjgbg.fun.valid;
 
 import com.github.yjgbg.fun.valid.core.Validator;
-import com.github.yjgbg.fun.valid.ext.LbkExtValidatorHypers;
 import com.github.yjgbg.fun.valid.ext.LbkExtValidatorsCore;
 import com.github.yjgbg.fun.valid.ext.LbkExtValidatorsStd;
 import lombok.AccessLevel;
@@ -13,10 +12,9 @@ import lombok.experimental.FieldDefaults;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 // 使用ExtensionMethod注解引入这两个扩展类
-@ExtensionMethod({LbkExtValidatorsCore.class, LbkExtValidatorsStd.class, LbkExtValidatorHypers.class})
+@ExtensionMethod({LbkExtValidatorsCore.class, LbkExtValidatorsStd.class})
 public class Sample {
 	public static void main(String[] args) {
 		v0();
@@ -44,7 +42,6 @@ public class Sample {
 		final var errors0 = validator0.apply(false,entity0);
 		// 第一个参数为是否开启快速校验（在第一个校验错误出现的时候，直接跳过后续校验）
 		final var errors1 = validator1.apply(false,entity1);
-		System.out.println(errors0.to422Error(Function.identity(),"422error"));
 		System.out.println(errors1.toMessageMap());
 	}
 
