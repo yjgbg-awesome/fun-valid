@@ -49,8 +49,8 @@ public class Sample {
 		final var entity1 = new Person("null", 0L, Gender.FEMALE,"1234567891011","asdqq.com",null);
 		final var validator1 =Validator.<Person>none()
 				.nonNull("person不能为空")
-				.gt(Person::getId,"id应该大于0",0L)
-				.length(Person::getName,"name应该是2-5个字",2,5)
+				.gt(Person::getId,"id应该大于0",false,0L)
+				.length(Person::getName,"name应该是2-5个字",false,2,5)
 				.equal(Person::getGender,"应该是男性",Gender.MALE)
 				.regexp(Person::getPhone,"电话号码不合法", true, "^\\d{11}$")
 				.regexp(Person::getEmail,"email不合法", false,
