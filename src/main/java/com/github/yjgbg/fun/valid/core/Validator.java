@@ -66,16 +66,16 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 	 * C类复杂校验器
 	 * 根据元素的校验器，构造一个元素集合的校验器
 	 */
-	static <A> Validator<Iterable<A>> iter(Validator<? super A> validator) {
-		return (failFast, obj) -> {
-			if (obj == null) return Errors.none();
-			final var atomicInt = new AtomicInteger(0);
-			final var stream = Stream.ofAll(obj)
-					.map(validator.apply(failFast))
-					.map(errors -> Errors.transform(Objects.toString(atomicInt.getAndIncrement()), errors));
-			return failFast
-					? stream.filter(Errors::hasError).getOrElse(Errors.none())
-					: stream.fold(Errors.none(), Errors::plus);
-		};
-	}
+  static <A> Validator<Iterable<A>> iter(Function<A,Validator<? super A>> validator) {
+    return (failFast, obj) -> {
+      if (obj == null) return Errors.none();
+      final var atomicInt = new AtomicInteger(0);
+      final var stream = Stream.ofAll(obj)
+          .map(item -> validator.apply(item).apply(failFast,item))
+          .map(errors -> Errors.transform(Objects.toString(atomicInt.getAndIncrement()), errors));
+      return failFast
+          ? stream.filter(Errors::hasError).getOrElse(Errors.none())
+          : stream.fold(Errors.none(), Errors::plus);
+    };
+  }
 }

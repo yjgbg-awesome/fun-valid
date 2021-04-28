@@ -37,17 +37,22 @@ public class LbkExtValidatorsCore {
 
 	public static <A, B> Validator<A>
 	andIter(Validator<A> that, Getter<A, Iterable<B>> prop, Validator<? super B> validator) {
-		return Validator.plus(that, Validator.transform(prop, Validator.iter(validator)));
+		return Validator.plus(that, Validator.transform(prop, Validator.iter(__ -> validator)));
 	}
+
+  public static <A, B> Validator<A>
+  andIter(Validator<A> that, Getter<A, Iterable<B>> prop, Function<B,Validator<? super B>> validator) {
+    return Validator.plus(that, Validator.transform(prop, Validator.iter(validator)));
+  }
 
 	public static <A, B> Validator<A> andIter(Validator<A> that, Getter<A, Iterable<B>> prop, @NotNull String message,
 																						Function<@Nullable B, @NotNull Boolean> constraint) {
-		return Validator.plus(that, Validator.transform(prop, Validator.iter(Validator.simple(constraint,
+		return Validator.plus(that, Validator.transform(prop, Validator.iter(__ -> Validator.simple(constraint,
 				x -> message.replaceAll("%s", Objects.toString(x))))));
 	}
 
 	public static <A> Validator<Iterable<A>> iter(Validator<? super A> that) {
-		return Validator.iter(that);
+		return Validator.iter(__ -> that);
 	}
 
 	public static Errors mapMessage(Errors that, Function<@NotNull String, @NotNull String> mapper) {
