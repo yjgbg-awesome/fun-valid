@@ -35,6 +35,14 @@ public class LbkExtValidatorsCore {
 				Validator.simple(constraint, x -> message.replaceAll("%s", Objects.toString(x)))));
 	}
 
+	public static <A> Validator<Iterable<A>> andIter(Validator<Iterable<A>> that,Validator<? super A> validator) {
+	  return Validator.plus(that,Validator.iter(__ -> validator));
+  }
+
+  public static <A> Validator<Iterable<A>> andIter(Validator<Iterable<A>> that,Function<A,Validator<? super A>> validator) {
+    return Validator.plus(that,Validator.iter(validator));
+  }
+
 	public static <A, B> Validator<A>
 	andIter(Validator<A> that, Getter<A, Iterable<B>> prop, Validator<? super B> validator) {
 		return Validator.plus(that, Validator.transform(prop, Validator.iter(__ -> validator)));
