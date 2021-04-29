@@ -39,14 +39,6 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 	 * A类复杂校验器
 	 * 根据两个目标元素的校验器，构造一个目标元素的校验器
 	 */
-//	static <A> Validator<A> plus(Validator<? super A> validator0, Validator<? super A> validator1) {
-//		return (failFast, obj) -> {
-//			final var error0 = validator0.apply(failFast, obj);
-//			if (failFast && error0 != Errors.none()) return error0;
-//			return Errors.plus(error0, validator1.apply(failFast, obj));
-//		};
-//	}
-
 	static <A> Validator<A> plus(Validator<? super A> validator0, Function<A,Validator<? super  A>> validator1) {
 		return (failFast, obj) -> {
 			final var error0 = validator0.apply(failFast, obj);
@@ -63,24 +55,11 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 		return (failFast, obj) ->
 				Errors.transform(prop.propertyName(), validator.apply(failFast, obj != null ? prop.apply(obj) : null));
 	}
-//
-//	/**
-//	 * C类复杂校验器
-//	 * 根据元素的校验器，构造一个元素集合的校验器
-//	 */
-//  static <A> Validator<Iterable<A>> iter(Function<A,Validator<? super A>> validator) {
-//    return (failFast, obj) -> {
-//      if (obj == null) return Errors.none();
-//      final var atomicInt = new AtomicInteger(0);
-//      final var stream = Stream.ofAll(obj)
-//          .map(item -> validator.apply(item).apply(failFast,item))
-//          .map(errors -> Errors.transform(Objects.toString(atomicInt.getAndIncrement()), errors));
-//      return failFast
-//          ? stream.filter(Errors::hasError).getOrElse(Errors.none())
-//          : stream.fold(Errors.none(), Errors::plus);
-//    };
-//  }
 
+	/**
+	 * C类复杂校验器
+	 * 根据元素的校验器，构造一个元素集合的校验器
+	 */
 	static <A> Validator<Iterable<A>> iter(Validator<? super A> validator) {
 		return (failFast, obj) -> {
 			if (obj == null) return Errors.none();
