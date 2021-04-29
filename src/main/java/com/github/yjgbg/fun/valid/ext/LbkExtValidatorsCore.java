@@ -20,47 +20,43 @@ public class LbkExtValidatorsCore {
 	/**
 	 * 用message和predicate创建一个新的简单校验器，并与that相加，然后返回
 	 */
+
+	public static <A> Validator<A>
+	and(Validator<A> that, Function<A,Validator<? super A>> another) {
+		return Validator.plus(that, another);
+	}
+
 	public static <A> Validator<A>
 	and(Validator<A> that, @NotNull String message, Function<@Nullable A, @NotNull Boolean> constraint) {
-		return Validator.plus(that, Validator.simple(constraint, x -> message.replaceAll("%s", Objects.toString(x))));
+		return Validator.plus(that,__ -> Validator.simple(constraint, x -> message.replaceAll("%s", Objects.toString(x))));
 	}
 
 	public static <A, B> Validator<A> and(Validator<A> that, Getter<A, B> prop, Validator<B> another) {
-		return Validator.plus(that, Validator.transform(prop, another));
+		return Validator.plus(that, __ -> Validator.transform(prop, another));
 	}
 
 	public static <A, B> Validator<A> and(Validator<A> that, Getter<A, B> prop, @NotNull String message,
 																				Function<@Nullable B, @NotNull Boolean> constraint) {
-		return Validator.plus(that, Validator.transform(prop,
+		return Validator.plus(that,__ ->  Validator.transform(prop,
 				Validator.simple(constraint, x -> message.replaceAll("%s", Objects.toString(x)))));
 	}
 
 	public static <A> Validator<Iterable<A>> andIter(Validator<Iterable<A>> that,Validator<? super A> validator) {
-	  return Validator.plus(that,Validator.iter(__ -> validator));
-  }
-
-  public static <A> Validator<Iterable<A>> andIter(Validator<Iterable<A>> that,Function<A,Validator<? super A>> validator) {
-    return Validator.plus(that,Validator.iter(validator));
+	  return Validator.plus(that,__ -> Validator.iter(validator));
   }
 
 	public static <A, B> Validator<A>
 	andIter(Validator<A> that, Getter<A, Iterable<B>> prop, Validator<? super B> validator) {
-		return Validator.plus(that, Validator.transform(prop, Validator.iter(__ -> validator)));
+		return Validator.plus(that,__ ->  Validator.transform(prop, Validator.iter(validator)));
 	}
-
-  public static <A, B> Validator<A>
-  andIter(Validator<A> that, Getter<A, Iterable<B>> prop, Function<B,Validator<? super B>> validator) {
-    return Validator.plus(that, Validator.transform(prop, Validator.iter(validator)));
-  }
-
 	public static <A, B> Validator<A> andIter(Validator<A> that, Getter<A, Iterable<B>> prop, @NotNull String message,
 																						Function<@Nullable B, @NotNull Boolean> constraint) {
-		return Validator.plus(that, Validator.transform(prop, Validator.iter(__ -> Validator.simple(constraint,
+		return Validator.plus(that,__ ->  Validator.transform(prop, Validator.iter(Validator.simple(constraint,
 				x -> message.replaceAll("%s", Objects.toString(x))))));
 	}
 
 	public static <A> Validator<Iterable<A>> iter(Validator<? super A> that) {
-		return Validator.iter(__ -> that);
+		return Validator.iter(that);
 	}
 
 	public static Errors mapMessage(Errors that, Function<@NotNull String, @NotNull String> mapper) {
