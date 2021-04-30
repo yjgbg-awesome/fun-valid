@@ -39,12 +39,16 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 	 * A类复杂校验器
 	 * 根据两个目标元素的校验器，构造一个目标元素的校验器
 	 */
-	static <A> Validator<A> plus(Validator<? super A> validator0, Function<A,Validator<? super  A>> validator1) {
+	static <A> Validator<A> plus(Validator<? super A> validator0, Validator<? super  A> validator1) {
 		return (failFast, obj) -> {
 			final var error0 = validator0.apply(failFast, obj);
 			if (failFast && error0 != Errors.none()) return error0;
-			return Errors.plus(error0, validator1.apply(obj).apply(failFast, obj));
+			return Errors.plus(error0, validator1.apply(failFast, obj));
 		};
+	}
+
+	static <A> Validator<A> from(Function<A,Validator<? super A>> validatorFunction) {
+		return (failFast, a) -> validatorFunction.apply(a).apply(failFast,a);
 	}
 
 	/**

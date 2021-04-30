@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /**
@@ -18,6 +19,15 @@ import java.util.regex.Pattern;
  */
 @ExtensionMethod(LbkExtValidatorsCore.class)
 public class LbkExtValidatorsStd {
+	public static <A,B> Validator<A>
+	andF(Validator<A> that, Getter<A,B> prop, Function<B,Validator<? super B>> validatorFunction) {
+		return that.and(prop,Validator.from(validatorFunction));
+	}
+
+	public static <A,B> Validator<A>
+	andIterF(Validator<A> that, Getter<A,Iterable<B>> prop, Function<B,Validator<? super B>> validatorFunction) {
+		return that.andIter(prop,Validator.from(validatorFunction));
+	}
 	/**
 	 * for object
 	 * */
