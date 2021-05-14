@@ -6,6 +6,7 @@ import java.beans.Introspector;
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -43,4 +44,18 @@ public interface Getter<A, B> extends Function<A, B>, Serializable {
     GETTER_NAME_CACHE.put(clazz, res);
     return res;
   }
+  static <B> Getter<Map<?,?>,B> fromMap(String key) {
+  	return new Getter<>() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public B apply(Map<?, ?> map) {
+				return (B) map.get(key);
+			}
+
+			@Override
+			public String propertyName() {
+				return key;
+			}
+		};
+	}
 }
