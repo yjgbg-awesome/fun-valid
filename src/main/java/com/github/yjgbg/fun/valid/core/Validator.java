@@ -39,7 +39,7 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 	 * A类复杂校验器
 	 * 根据两个目标元素的校验器，构造一个目标元素的校验器
 	 */
-	static <A> Validator<A> plus(Validator<? super A> validator0, Validator<? super  A> validator1) {
+	static <A> Validator<A> plus(Validator<? super A> validator0, Validator<? super A> validator1) {
 		return (failFast, obj) -> {
 			final var error0 = validator0.apply(failFast, obj);
 			if (failFast && error0 != Errors.none()) return error0;
@@ -47,8 +47,8 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 		};
 	}
 
-	static <A> Validator<A> from(Function<A,Validator<? super A>> validatorFunction) {
-		return (failFast, a) -> validatorFunction.apply(a).apply(failFast,a);
+	static <A> Validator<A> from(Function<A, Validator<? super A>> validatorFunction) {
+		return (failFast, a) -> validatorFunction.apply(a).apply(failFast, a);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 			if (obj == null) return Errors.none();
 			final var atomicInt = new AtomicInteger(0);
 			final var stream = Stream.ofAll(obj)
-					.map(item -> validator.apply(failFast,item))
+					.map(item -> validator.apply(failFast, item))
 					.map(errors -> Errors.transform(Objects.toString(atomicInt.getAndIncrement()), errors));
 			return failFast
 					? stream.filter(Errors::hasError).getOrElse(Errors.none())

@@ -22,36 +22,37 @@ public class LbkExtValidatorsCore {
 	 */
 
 	public static <A> Validator<A>
-	and(Validator<A> that, Function<A,Validator<? super A>> another) {
+	and(Validator<A> that, Function<A, Validator<? super A>> another) {
 		return Validator.plus(that, Validator.from(another));
 	}
 
 	public static <A> Validator<A>
 	and(Validator<A> that, @NotNull String message, Function<@Nullable A, @NotNull Boolean> constraint) {
-		return Validator.plus(that,Validator.simple(constraint, x -> message.replaceAll("%s", Objects.toString(x))));
+		return Validator.plus(that, Validator.simple(constraint, x -> message.replaceAll("%s", Objects.toString(x))));
 	}
 
 	public static <A, B> Validator<A> and(Validator<A> that, Getter<A, B> prop, Validator<B> another) {
-		return Validator.plus(that,Validator.transform(prop, another));
+		return Validator.plus(that, Validator.transform(prop, another));
 	}
 
 	public static <A, B> Validator<A> and(Validator<A> that, Getter<A, B> prop, @NotNull String message,
 																				Function<@Nullable B, @NotNull Boolean> constraint) {
-		return Validator.plus(that,Validator.transform(prop,
+		return Validator.plus(that, Validator.transform(prop,
 				Validator.simple(constraint, x -> message.replaceAll("%s", Objects.toString(x)))));
 	}
 
-	public static <A> Validator<Iterable<A>> andIter(Validator<Iterable<A>> that,Validator<? super A> validator) {
-	  return Validator.plus(that,Validator.iter(validator));
-  }
+	public static <A> Validator<Iterable<A>> andIter(Validator<Iterable<A>> that, Validator<? super A> validator) {
+		return Validator.plus(that, Validator.iter(validator));
+	}
 
 	public static <A, B> Validator<A>
 	andIter(Validator<A> that, Getter<A, Iterable<B>> prop, Validator<? super B> validator) {
-		return Validator.plus(that,Validator.transform(prop, Validator.iter(validator)));
+		return Validator.plus(that, Validator.transform(prop, Validator.iter(validator)));
 	}
+
 	public static <A, B> Validator<A> andIter(Validator<A> that, Getter<A, Iterable<B>> prop, @NotNull String message,
 																						Function<@Nullable B, @NotNull Boolean> constraint) {
-		return Validator.plus(that,Validator.transform(prop, Validator.iter(Validator.simple(constraint,
+		return Validator.plus(that, Validator.transform(prop, Validator.iter(Validator.simple(constraint,
 				x -> message.replaceAll("%s", Objects.toString(x))))));
 	}
 
@@ -71,6 +72,7 @@ public class LbkExtValidatorsCore {
 
 	private static final String SELF = "_self";
 	private static final String SEPARATOR = ".";
+
 	public static Map<String, Set<String>> toMessageMap(Errors errors) {
 		final Map<String, Set<String>> messages = errors.getMessages().isEmpty()
 				? Map() : Map(SELF, errors.getMessages());
