@@ -28,7 +28,8 @@ public interface Getter<A, B> extends Function<A, B>, Serializable {
 		method.setAccessible(Boolean.TRUE);
 		final var serializedLambda = (SerializedLambda) method.invoke(this);
 		final var getter = serializedLambda.getImplMethodName();
-		return Introspector.decapitalize(getter.replace("get", ""));
+		// 如果函数名是get开头，则取掉开头的get，并将剩余部分首字母小写，否则返回函数名
+		return getter.startsWith("get") ? Introspector.decapitalize(getter.substring(3)) : getter;
 	}
 
 	/**
