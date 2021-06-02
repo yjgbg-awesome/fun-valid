@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
-
+// this is just a comment
 // 使用ExtensionMethod注解引入这两个扩展类
 @ExtensionMethod({LbkExtValidatorsCore.class, LbkExtValidatorsStd.class})
 public class Sample {
