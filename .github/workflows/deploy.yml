@@ -16,8 +16,8 @@ jobs:
           distribution: 'adopt'
       - name: Config Settings.xml
         env:
-          M2_XML: ${{ secrets.M2_XML}}
-        run: echo $SETTINGS > ~/.m2/settings.xml
+          M2_XML: ${{ secrets.M2_XML }}
+        run: echo $M2_XML > ~/.m2/settings.xml
       - name: Echo Settings.xml
         run: cat ~/.m2/settings.xml
       - name: Build with Maven
