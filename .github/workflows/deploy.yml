@@ -1,0 +1,26 @@
+name: Java CI
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Config Settings.xml
+        env:
+          SETTINGS_XML: ${{ secrets.SETTINGS_XML}}
+        run: echo $SETTINGS.XML > ~/.m2/settings.xml
+      - name: Echo Settings.xml
+        run: echo ~/.m2/settings.xml
+      - name: Build with Maven
+        run: mvn package
+      - name: Push to maven central snapshots
+        run: mvn deploy
