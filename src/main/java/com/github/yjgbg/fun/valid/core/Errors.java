@@ -59,12 +59,8 @@ public class Errors {
 		if (reject0 != null && reject1 != null && reject0 != reject1)
 			throw new IllegalArgumentException(String.format("不同数据对象的校验结果不可相加(%s,%s)", reject0, reject1));
 		// 并集
-		final var messages0 = errors0.getMessages();
-		final var messages1 = errors1.getMessages();
-		final var messages = messages0.union(messages1);
-		final var fieldErrors0 = errors0.getFieldErrors();
-		final var fieldErrors1 = errors1.getFieldErrors();
-		final var fieldErrors = fieldErrors0.merge(fieldErrors1, Errors::plus);
+		final var messages =  errors0.getMessages().union(errors1.getMessages());
+		final var fieldErrors = errors0.getFieldErrors().merge(errors1.getFieldErrors(), Errors::plus);
 		return new Errors(reject0 != null ? reject0 : reject1, messages, fieldErrors);
 	}
 

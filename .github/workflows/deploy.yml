@@ -18,8 +18,6 @@ jobs:
         env:
           M2_XML: ${{ secrets.M2_XML }}
         run: echo $M2_XML > ~/.m2/settings.xml
-      - name: Echo Settings.xml
-        run: cat ~/.m2/settings.xml
       - name: Build with Maven
         run: mvn package
       - name: Push to maven central snapshots
