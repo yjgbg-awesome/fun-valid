@@ -6,7 +6,7 @@
 ```xml
 <dependency>
     <groupId>com.github.yjgbg</groupId>
-    <artifactId>yjgbg-valid</artifactId>
+    <artifactId>fun-valid</artifactId>
     <version>ROLLING-SNAPSHOT</version>
 </dependency>
 ```
