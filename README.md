@@ -7,6 +7,6 @@
 <dependency>
     <groupId>com.github.yjgbg</groupId>
     <artifactId>yjgbg-valid</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>ROLLING-SNAPSHOT</version>
 </dependency>
 ```
