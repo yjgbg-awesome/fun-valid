@@ -16,17 +16,18 @@
     <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
-      <version>0.10.3</version>
+      <version>0.10.4</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
-      <version>20.1.0</version>
+      <version>22.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.18</version>
+      <version>1.18.20</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <build>
@@ -55,12 +56,6 @@
       </plugin>
     </plugins>
   </build>
-<!--  <distributionManagement>-->
-<!--    <repository>-->
-<!--      <id>maven-snapshots</id>-->
-<!--      <url>https://nexus3.hypers.cc/repository/maven-snapshots/</url>-->
-<!--    </repository>-->
-<!--  </distributionManagement>-->
   <distributionManagement>
     <snapshotRepository>
       <id>oss</id>
