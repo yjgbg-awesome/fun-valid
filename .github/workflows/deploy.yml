@@ -14,11 +14,5 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: Config Settings.xml
-        env:
-          M2_XML: ${{ secrets.M2_XML }}
-        run: echo $M2_XML > ~/.m2/settings.xml
-      - name: Build with Maven
-        run: mvn package
-      - name: Push to maven central snapshots
-        run: mvn deploy
+      - name: Publish with Gradle
+        run: chmod +x .gradlew;./gradlew publishThisPublicationToMavenRepository -PmavenUsername=${{ secrets.M2_USERNAME }} -PmavenPassword=${{ secrets.M2_PASSWORD}}
