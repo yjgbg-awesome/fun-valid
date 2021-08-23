@@ -17,8 +17,7 @@ jobs:
       - name: Setup Cache Gradle Wrapper
         uses: actions/cache@v2
         with:
-          path: |
-            - ~/.gradle/wrapper
+          path: ~/.gradle/wrapper
       - name: Publish with Gradle
         run: |
           chmod +x gradlew
