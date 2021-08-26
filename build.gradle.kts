@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     implementation("io.vavr:vavr:0.10.4")
-    implementation("org.jetbrains:annotations:22.0.0")
+    compileOnly("org.jetbrains:annotations:+")
     compileOnly("org.projectlombok:lombok:1.18.18")
     annotationProcessor("org.projectlombok:lombok:1.18.18")
 }
