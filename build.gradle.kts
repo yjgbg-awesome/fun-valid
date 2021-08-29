@@ -9,10 +9,7 @@ description = "fun-valid"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
-    mavenLocal()
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
+    mavenCentral()
 }
 
 dependencies {
@@ -26,17 +23,14 @@ java {
     withSourcesJar()
 }
 
-val mavenUsername:String by project
-val mavenPassword:String by project
-
 publishing {
     publications.create<MavenPublication>("this") {
         from(components["java"])
     }
     repositories.maven("https://oss.sonatype.org/content/repositories/snapshots") {
         credentials {
-            username = mavenUsername
-            password = mavenPassword
+            username = project.ext["mavenUsername"].toString()
+            password = project.ext["mavenPassword"].toString()
         }
     }
 }
