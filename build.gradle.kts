@@ -26,17 +26,14 @@ java {
     withSourcesJar()
 }
 
-val mavenUsername:String by project
-val mavenPassword:String by project
-
 publishing {
     publications.create<MavenPublication>("this") {
         from(components["java"])
     }
     repositories.maven("https://oss.sonatype.org/content/repositories/snapshots") {
         credentials {
-            username = mavenUsername
-            password = mavenPassword
+            username = project.ext["mavenUsername"].toString()
+            password = project.ext["mavenPassword"].toString()
         }
     }
 }
