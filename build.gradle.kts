@@ -9,10 +9,7 @@ description = "fun-valid"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
-    mavenLocal()
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
+    mavenCentral()
 }
 
 dependencies {
