@@ -29,9 +29,6 @@ public class LbkExtValidatorsStd {
 		return that.andIter(prop, Validator.from(validatorFunction));
 	}
 
-	/**
-	 * for object
-	 */
 	public static <A, B> Validator<A>
 	equal(Validator<A> that, Getter<A, B> prop, String message, B value) {
 		return that.and(prop, message, x -> Objects.equals(x, value));
@@ -75,9 +72,6 @@ public class LbkExtValidatorsStd {
 		return that.and(prop, message, Objects::isNull);
 	}
 
-	/**
-	 * for comparable
-	 */
 	public static <A, B extends Comparable<B>> Validator<A>
 	lt(Validator<A> that, Getter<A, B> prop, String message, boolean allowNull, B max) {
 		return that.and(prop, message, x -> x == null ? allowNull : x.compareTo(max) < 0);
@@ -104,9 +98,6 @@ public class LbkExtValidatorsStd {
 				x.compareTo(min) >= 0 && x.compareTo(max) <= 0);
 	}
 
-	/**
-	 * for string and other charsequence
-	 */
 	public static <A, B extends String> Validator<A>
 	regexp(Validator<A> that, Getter<A, B> prop, String message, boolean allowNull, @RegExp String regexp) {
 		return that.and(prop, message, x -> x == null ? allowNull : Pattern.matches(regexp, x));
@@ -117,9 +108,6 @@ public class LbkExtValidatorsStd {
 		return that.and(prop, message, x -> x == null ? allowNull : x.length() >= min && x.length() <= max);
 	}
 
-	/**
-	 * for collection
-	 */
 	public static <A, B extends Collection<?>> Validator<A>
 	size(Validator<A> that, Getter<A, B> prop, String message, boolean allowNull, int min, int max) {
 		return that.and(prop, message, x -> x == null ? allowNull : (x.size() >= min && x.size() <= max));

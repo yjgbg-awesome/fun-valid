@@ -1,5 +1,5 @@
 plugins {
-    java
+    `java-library`
     `maven-publish`
 }
 
@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.vavr:vavr:0.10.4")
+    api("io.vavr:vavr:0.+")
     compileOnly("org.jetbrains:annotations:+")
     compileOnly("org.projectlombok:lombok:1.18.18")
     annotationProcessor("org.projectlombok:lombok:1.18.18")
@@ -31,6 +31,22 @@ publishing {
         credentials {
             username = project.ext["mavenUsername"].toString()
             password = project.ext["mavenPassword"].toString()
+        }
+    }
+}
+
+tasks.withType<Javadoc> {
+    options.encoding = "UTF-8"
+}
+
+tasks.create("geneDocs") {
+    dependsOn("javadoc")
+    doLast {
+        delete("docs")
+        copy {
+            exclude("**/*.zip")
+            from("build/docs/javadoc")
+            into("docs")
         }
     }
 }

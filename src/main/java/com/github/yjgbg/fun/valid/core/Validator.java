@@ -12,7 +12,7 @@ import java.util.function.Function;
 /**
  * Validator接口,以及Validator之间的运算
  *
- * @param <A>
+ * @param <A> 校验的目标元素类型
  */
 @FunctionalInterface
 public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nullable A, Errors> {
@@ -22,6 +22,8 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 	/**
 	 * 空校验器
 	 * 构造一个校验结果恒为空的校验器
+	 * @param <A> 校验的目标元素类型
+	 * @return 校验结果恒为空的校验器
 	 */
 	static <A> Validator<A> none() {
 		return (failFast, obj) -> Errors.none();
@@ -30,6 +32,10 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 	/**
 	 * 简单校验器
 	 * 根据constraint描述的规则，和message描述的错误信息构造一个简单校验器
+	 * @param <A> 校验的目标元素类型
+	 * @param message 错误信息
+	 * @param constraint 约束条件表达式
+	 * @return 简单校验器
 	 */
 	static <A> Validator<A> simple(Function<@Nullable A, @NotNull Boolean> constraint, Function<A, String> message) {
 		return (failFast, obj) -> constraint.apply(obj) ? Errors.none() : Errors.simple(obj, message.apply(obj));
@@ -38,6 +44,10 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 	/**
 	 * A类复杂校验器
 	 * 根据两个目标元素的校验器，构造一个目标元素的校验器
+	 * @param <A> 校验的目标元素类型
+	 * @param validator0 一个校验器
+	 * @param validator1 另一个校验器
+	 * @return  由两个校验器组合而成的校验器
 	 */
 	static <A> Validator<A> plus(Validator<? super A> validator0, Validator<? super A> validator1) {
 		return (failFast, obj) -> {
@@ -47,13 +57,25 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 		};
 	}
 
+	/**
+	 * 将目标元素校验器构造器映射为校验器
+	 *
+	 * @param validatorFunction 校验器构造器
+	 * @param <A> 校验的目标元素类型
+	 * @return 校验器
+	 */
 	static <A> Validator<A> from(Function<A, Validator<? super A>> validatorFunction) {
 		return (failFast, a) -> validatorFunction.apply(a).apply(failFast, a);
 	}
 
 	/**
 	 * B类复杂校验器
-	 * 根据field类型的校验器和prop，构造一个目标类型校验器
+	 * 根据field类型的校验器和prop，构造一个目标类型校验器,规则为校验目标元素经过getter运算之后的结果符合validator校验
+	 * @param <A> 类型A
+	 * @param <B> 类型B
+	 * @param validator 一个B类型的转换器
+	 * @param prop 一个A 到 B的转换器
+	 * @return 目标类型校验器
 	 */
 	static <A, B> Validator<A> transform(Getter<A, @Nullable B> prop, Validator<? super B> validator) {
 		return (failFast, obj) ->
@@ -63,6 +85,9 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 	/**
 	 * C类复杂校验器
 	 * 根据元素的校验器，构造一个元素集合的校验器
+	 * @param <A> 校验的目标元素类型
+	 * @param validator A类型的校验器
+	 * @return A元素集合的校验器
 	 */
 	static <A> Validator<Iterable<A>> iter(Validator<? super A> validator) {
 		return (failFast, obj) -> {

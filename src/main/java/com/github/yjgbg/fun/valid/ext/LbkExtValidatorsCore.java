@@ -17,10 +17,6 @@ import static io.vavr.API.Map;
  * 核心扩展类
  */
 public class LbkExtValidatorsCore {
-	/**
-	 * 用message和predicate创建一个新的简单校验器，并与that相加，然后返回
-	 */
-
 	public static <A> Validator<A>
 	and(Validator<A> that, Function<A, Validator<? super A>> another) {
 		return Validator.plus(that, Validator.from(another));

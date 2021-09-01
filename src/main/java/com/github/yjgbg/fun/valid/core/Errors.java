@@ -26,8 +26,7 @@ public class Errors {
 	Map<String, Errors> fieldErrors;
 
 	/**
-	 * 空错误
-	 * 表示没有错
+	 * @return 空错误，表示没有错
 	 */
 	public static Errors none() {
 		return NONE;
@@ -36,6 +35,9 @@ public class Errors {
 	/**
 	 * 简单错误
 	 * 由rejectValue和message组成的简单错误
+	 * @param rejectValue 不符合constraint的值
+	 * @param message 错误信息
+	 * @return 由rejectValue和message组成的简单错误
 	 */
 	@Contract(pure = true)
 	public static Errors simple(@Nullable final Object rejectValue, @NotNull final String message) {
@@ -46,6 +48,9 @@ public class Errors {
 	/**
 	 * A类复杂错误
 	 * 由两个错误相加而成，对应字段相加
+	 * @param errors0 错误0
+	 * @param errors1 错误1
+	 * @return 由两个错误相加而成，对应字段相加
 	 */
 	@NotNull
 	@Contract(pure = true)
@@ -67,6 +72,9 @@ public class Errors {
 	/**
 	 * B类复杂错误
 	 * 根据一个fieldError以及field名，构造一个实体Error
+	 * @param key field名
+	 * @param errors error
+	 * @return errors
 	 */
 	@Contract(pure = true)
 	public static Errors transform(@NotNull final String key, @Nullable final Errors errors) {
@@ -75,6 +83,10 @@ public class Errors {
 		return new Errors(null, Set(), Map(key, errors));
 	}
 
+	/**
+	 * 是否包含错误（！是否为空错误）
+	 * @return 是否包含错误
+	 */
 	public boolean hasError() {
 		return this != none();
 	}
