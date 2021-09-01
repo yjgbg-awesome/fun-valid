@@ -24,7 +24,10 @@ jobs:
           chmod +x gradlew
           ./gradlew geneDocs -PmavenUsername=${{ secrets.M2_USERNAME }} -PmavenPassword=${{ secrets.M2_PASSWORD}}
       - name: Push Docs
-        uses: EndBug/add-and-commit@v7
-        with:
-          add: 'docs'
-          message: 'update docs by github action'
+        uses: actions/checkout@v2
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "update docs by github action"
+          git push
