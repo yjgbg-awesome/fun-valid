@@ -24,6 +24,7 @@ jobs:
           chmod +x gradlew
           ./gradlew geneDocs
       - name: Push Docs
+        uses: EndBug/add-and-commit@v7
         with:
           add: 'docs'
           message: 'update docs by github action'
