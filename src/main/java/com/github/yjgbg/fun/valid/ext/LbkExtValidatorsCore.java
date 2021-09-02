@@ -14,7 +14,7 @@ import java.util.function.Function;
 import static io.vavr.API.Map;
 
 /**
- * 核心扩展类
+ * 核心扩展类(修改下注释，看下文档效果)
  */
 public class LbkExtValidatorsCore {
 	public static <A> Validator<A>
