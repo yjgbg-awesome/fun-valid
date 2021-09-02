@@ -11,4 +11,4 @@
 </dependency>
 ```
 
-[javadoc](https://com-github-yjgbg.github.ui/fun-valid)
+[javadoc](https://com-github-yjgbg.github.io/fun-valid)
