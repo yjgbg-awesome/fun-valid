@@ -10,3 +10,5 @@
     <version>ROLLING-SNAPSHOT</version>
 </dependency>
 ```
+
+[javadoc](https://com-github-yjgbg.github.io/fun-valid)
