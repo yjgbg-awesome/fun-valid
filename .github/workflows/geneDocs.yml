@@ -28,5 +28,5 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add ./docs
-          git commit -m "generated"
+          git commit -m "自动更新文档 by github actions"
           git push origin HEAD:main
