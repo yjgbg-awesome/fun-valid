@@ -2,8 +2,8 @@ name: GeneDocs
 
 on:
   push:
-    tags:
-      - publish.**
+    branch:
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
