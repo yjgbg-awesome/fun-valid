@@ -26,8 +26,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":1,"i1":2,"i2":1,"i3":2,"i4":1,"i5":1,"i6":1};
-var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"]};
+var data = {"i0":1,"i1":1,"i2":8,"i3":2,"i4":1,"i5":1,"i6":1};
+var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"],8:["t4","Exception Summary"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -104,7 +104,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <table class="typeSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Classes</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Interface Summary</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Class Summary</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Classes</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Interface Summary</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Class Summary</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Exception Summary</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
@@ -114,15 +114,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colLast" scope="row">&nbsp;</th>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><a href="com/github/yjgbg/fun/valid/core/Errors.html" title="class in com.github.yjgbg.fun.valid.core">Errors</a></td>
-<th class="colLast" scope="row">
-<div class="block">Error的构建，以及相关运算，包括Error的加法，以及Error与string的运算</div>
-</th>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><a href="com/github/yjgbg/fun/valid/core/Getter.html" title="interface in com.github.yjgbg.fun.valid.core">Getter</a>&lt;<a href="com/github/yjgbg/fun/valid/core/Getter.html" title="type parameter in Getter">A</a>,&#8203;<a href="com/github/yjgbg/fun/valid/core/Getter.html" title="type parameter in Getter">B</a>&gt;</td>
 <th class="colLast" scope="row">
 <div class="block">表示一个javaBean中的get方法 用途：希望对路径有类型安全的表达，而不是拼接字符串</div>
+</th>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><a href="com/github/yjgbg/fun/valid/core/Result.html" title="class in com.github.yjgbg.fun.valid.core">Result</a></td>
+<th class="colLast" scope="row">
+<div class="block">Error的构建，以及相关运算，包括Error的加法，以及Error与string的运算</div>
 </th>
 </tr>
 <tr id="i3" class="rowColor">
