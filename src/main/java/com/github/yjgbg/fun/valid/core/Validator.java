@@ -20,7 +20,7 @@ public interface Validator<A> extends CoreSupport<A>, StandardSupport<A> {
     return this;
   }
 
-  Errors apply(@NotNull Boolean failFast, @Nullable A a);
+  Result apply(@NotNull Boolean failFast, @Nullable A a);
 
   /**
    * 空校验器
@@ -30,7 +30,7 @@ public interface Validator<A> extends CoreSupport<A>, StandardSupport<A> {
    * @return 校验结果恒为空的校验器
    */
   static <A> Validator<A> none() {
-    return (failFast, obj) -> Errors.none();
+    return (failFast, obj) -> Result.none();
   }
 
   /**
@@ -43,11 +43,11 @@ public interface Validator<A> extends CoreSupport<A>, StandardSupport<A> {
    * @return 简单校验器
    */
   static <A> Validator<A> simple(Function<A, String> message, Function<@Nullable A, @NotNull Boolean> constraint) {
-    return (failFast, obj) -> constraint.apply(obj) ? Errors.none() : Errors.simple(obj, message.apply(obj));
+    return (failFast, obj) -> constraint.apply(obj) ? Result.none() : Result.simple(obj, message.apply(obj));
   }
 
   static <A> Validator<A> simple(String messageTemplate, Function<@Nullable A, @NotNull Boolean> constraint) {
-    return (failFast, obj) -> constraint.apply(obj) ? Errors.none() : Errors.simple(obj, messageTemplate.replaceAll("%s", Objects.toString(obj)));
+    return (failFast, obj) -> constraint.apply(obj) ? Result.none() : Result.simple(obj, messageTemplate.replaceAll("%s", Objects.toString(obj)));
   }
 
   /**
@@ -70,8 +70,8 @@ public interface Validator<A> extends CoreSupport<A>, StandardSupport<A> {
   default Validator<A> plus(Validator<? super A> anotherValidator) {
     return (failFast, obj) -> {
       final var error0 = this.apply(failFast, obj);
-      if (failFast && error0 != Errors.none()) return error0;
-      return Errors.plus(error0, anotherValidator.apply(failFast, obj));
+      if (failFast && error0 != Result.none()) return error0;
+      return Result.plus(error0, anotherValidator.apply(failFast, obj));
     };
   }
 
@@ -83,6 +83,6 @@ public interface Validator<A> extends CoreSupport<A>, StandardSupport<A> {
    * @return 目标类型校验器
    */
   default <B> Validator<B> transform(Getter<B, @Nullable A> prop) {
-    return (failFast, obj) -> Errors.transform(prop.propertyName(), this.apply(failFast, obj != null ? prop.apply(obj) : null));
+    return (failFast, obj) -> Result.transform(prop.propertyName(), this.apply(failFast, obj != null ? prop.apply(obj) : null));
   }
 }
