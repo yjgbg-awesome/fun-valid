@@ -1,7 +1,5 @@
 package com.github.yjgbg.fun.valid.core;
 
-import io.vavr.collection.Map;
-import io.vavr.collection.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +8,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static io.vavr.API.Map;
-import static io.vavr.API.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Error的构建，以及相关运算，包括Error的加法，以及Error与string的运算
@@ -20,7 +19,7 @@ import static io.vavr.API.Set;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Errors {
-	private static final Errors NONE = new Errors(null, Set(), Map());
+	private static final Errors NONE = new Errors(null, Set.of(), Map.of());
 	Object rejectValue;
 	Set<String> messages;
 	Map<String, Errors> fieldErrors;
@@ -42,7 +41,7 @@ public class Errors {
 	@Contract(pure = true)
 	public static Errors simple(@Nullable final Object rejectValue, @NotNull final String message) {
 		if (rejectValue == null && message.isBlank()) return none();
-		return new Errors(rejectValue, Set(message), Map());
+		return new Errors(rejectValue, Set.of(message), Map.of());
 	}
 
 	/**
@@ -64,8 +63,11 @@ public class Errors {
 		if (reject0 != null && reject1 != null && reject0 != reject1)
 			throw new IllegalArgumentException(String.format("不同数据对象的校验结果不可相加(%s,%s)", reject0, reject1));
 		// 并集
-		final var messages =  errors0.getMessages().union(errors1.getMessages());
-		final var fieldErrors = errors0.getFieldErrors().merge(errors1.getFieldErrors(), Errors::plus);
+		final var messages = new HashSet<String>();
+		messages.addAll(errors0.messages);
+		messages.addAll(errors1.messages);
+		final var fieldErrors = new HashMap<>(errors0.fieldErrors);
+		errors1.fieldErrors.forEach((k,v) -> fieldErrors.merge(k,v,Errors::plus));
 		return new Errors(reject0 != null ? reject0 : reject1, messages, fieldErrors);
 	}
 
@@ -80,7 +82,7 @@ public class Errors {
 	public static Errors transform(@NotNull final String key, @Nullable final Errors errors) {
 		if (errors == null) return none();
 		if (errors == none()) return none();
-		return new Errors(null, Set(), Map(key, errors));
+		return new Errors(null, Set.of(), Map.of(key, errors));
 	}
 
 	/**
@@ -89,5 +91,36 @@ public class Errors {
 	 */
 	public boolean hasError() {
 		return this != none();
+	}
+
+	public Errors mapMessage(Function<String,String> mapper) {
+		final var messageErrors = this.getMessages().stream()
+				.map(oldMessage -> Errors.simple(getRejectValue(), mapper.apply(oldMessage)))
+				.reduce(Errors.none(), Errors::plus);
+		return this.getFieldErrors().entrySet().stream()
+				.map(entry -> Errors.transform(entry.getKey(), entry.getValue().mapMessage(mapper)))
+				.reduce(messageErrors, Errors::plus);
+	}
+
+	private static final String SELF = "__self__";
+	private static final String SEPARATOR = ".";
+
+	public Map<String, Set<String>> toMessageMap() {
+		final Map<String, Set<String>> messages = new HashMap<>(getMessages().isEmpty()
+				? Map.of() : Map.of(SELF, getMessages()));
+		final var fieldErrors = getFieldErrors().entrySet().stream()
+				.flatMap(entry -> entry.getValue().toMessageMap().entrySet().stream()
+						.map(e -> new Object(){
+							final String k = Objects.equals(e.getKey(),SELF) ? entry.getKey() : entry.getKey() + SEPARATOR + e.getKey();
+							final Set<String> v = e.getValue();
+						})
+				)
+				.collect(Collectors.toMap(annoy -> annoy.k, annoy -> annoy.v));
+		fieldErrors.forEach((k,v) -> messages.merge(k,v,(v0,v1) -> {
+			final var tmp = new HashSet<>(v0);
+			tmp.addAll(v1);
+			return tmp;
+		}));
+		return messages;
 	}
 }

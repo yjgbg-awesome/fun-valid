@@ -1,15 +1,12 @@
 package com.github.yjgbg.fun.valid.ext;
 
-import com.github.yjgbg.fun.valid.core.Errors;
 import com.github.yjgbg.fun.valid.core.Getter;
 import com.github.yjgbg.fun.valid.core.Validator;
-import io.vavr.collection.Set;
 import lombok.experimental.ExtensionMethod;
 import org.intellij.lang.annotations.RegExp;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -111,9 +108,5 @@ public class LbkExtValidatorsStd {
 	public static <A, B extends Collection<?>> Validator<A>
 	size(Validator<A> that, Getter<A, B> prop, String message, boolean allowNull, int min, int max) {
 		return that.and(prop, message, x -> x == null ? allowNull : (x.size() >= min && x.size() <= max));
-	}
-
-	public static Map<String, java.util.Set<String>> toJavaMap(Errors errors) {
-		return errors.toMessageMap().mapValues(Set::toJavaSet).toJavaMap();
 	}
 }

@@ -1,17 +1,12 @@
 package com.github.yjgbg.fun.valid.ext;
 
-import com.github.yjgbg.fun.valid.core.Errors;
 import com.github.yjgbg.fun.valid.core.Getter;
 import com.github.yjgbg.fun.valid.core.Validator;
-import io.vavr.collection.Map;
-import io.vavr.collection.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Function;
-
-import static io.vavr.API.Map;
 
 /**
  * 核心扩展类(修改下注释，看下文档效果)
@@ -54,28 +49,5 @@ public class LbkExtValidatorsCore {
 
 	public static <A> Validator<Iterable<A>> iter(Validator<? super A> that) {
 		return Validator.iter(that);
-	}
-
-	public static Errors mapMessage(Errors that, Function<@NotNull String, @NotNull String> mapper) {
-		final var messageErrors = that.getMessages()
-				.map(oldMessage -> Errors.simple(that.getRejectValue(), mapper.apply(oldMessage)))
-				.fold(Errors.none(), Errors::plus);
-		return that.getFieldErrors()
-				.mapValues(errors -> mapMessage(errors, mapper))
-				.map(entry -> Errors.transform(entry._1(), entry._2()))
-				.fold(messageErrors, Errors::plus);
-	}
-
-	private static final String SELF = "_self";
-	private static final String SEPARATOR = ".";
-
-	public static Map<String, Set<String>> toMessageMap(Errors errors) {
-		final Map<String, Set<String>> messages = errors.getMessages().isEmpty()
-				? Map() : Map(SELF, errors.getMessages());
-		final var fieldErrors = errors.getFieldErrors()
-				.flatMap((field, error) -> toMessageMap(error)
-						.mapKeys(subField -> Objects.equals(subField, SELF) ? field : field + SEPARATOR + subField)
-				);
-		return messages.merge(fieldErrors, Set::union);
 	}
 }

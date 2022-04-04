@@ -1,13 +1,12 @@
 package com.github.yjgbg.fun.valid.core;
 
-import io.vavr.Function2;
-import io.vavr.collection.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
 /**
  * Validator接口,以及Validator之间的运算
@@ -15,8 +14,8 @@ import java.util.function.Function;
  * @param <A> 校验的目标元素类型
  */
 @FunctionalInterface
-public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nullable A, Errors> {
-	@Override
+public interface Validator<@Nullable A> {
+
 	Errors apply(@NotNull Boolean failFast, @Nullable A a);
 
 	/**
@@ -93,12 +92,12 @@ public interface Validator<@Nullable A> extends Function2<@NotNull Boolean, @Nul
 		return (failFast, obj) -> {
 			if (obj == null) return Errors.none();
 			final var atomicInt = new AtomicInteger(0);
-			final var stream = Stream.ofAll(obj)
-					.map(item -> validator.apply(failFast, item))
+			final var stream = StreamSupport.stream(obj.spliterator(),false)
+					.map(item -> validator.apply(failFast,item))
 					.map(errors -> Errors.transform(Objects.toString(atomicInt.getAndIncrement()), errors));
 			return failFast
-					? stream.filter(Errors::hasError).getOrElse(Errors.none())
-					: stream.fold(Errors.none(), Errors::plus);
+					? stream.filter(Errors::hasError).findAny().orElse(Errors.none())
+					: stream.reduce(Errors.none(), Errors::plus);
 		};
 	}
 }
