@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.github.yjgbg.fun.valid"},{"l":"com.github.yjgbg.fun.valid.core"},{"l":"com.github.yjgbg.fun.valid.ext"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.github.yjgbg.fun.valid"},{"l":"com.github.yjgbg.fun.valid.core"},{"l":"com.github.yjgbg.fun.valid.support"}]
