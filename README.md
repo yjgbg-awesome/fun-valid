@@ -7,7 +7,7 @@
 <dependency>
     <groupId>com.github.yjgbg</groupId>
     <artifactId>fun-valid</artifactId>
-    <version>ROLLING-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
 </dependency>
 ```
 
