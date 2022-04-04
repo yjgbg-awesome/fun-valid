@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.github.yjgbg"
-version = "ROLLING-SNAPSHOT"
+version = "2.0-SNAPSHOT"
 description = "fun-valid"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
