@@ -5,8 +5,8 @@ import lombok.SneakyThrows;
 import java.beans.Introspector;
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -20,12 +20,12 @@ import java.util.function.Function;
  */
 @FunctionalInterface
 public interface Getter<A, B> extends Function<A, B>, Serializable {
-	HashMap<Class<?>, String> GETTER_NAME_CACHE = new HashMap<>();
+	Map<Class<?>, String> GETTER_NAME_CACHE = new ConcurrentHashMap<>();
 
 	@SneakyThrows
 	private String propertyName0() {
 		final var method = this.getClass().getDeclaredMethod("writeReplace");
-		method.setAccessible(Boolean.TRUE);
+		method.setAccessible(true);
 		final var serializedLambda = (SerializedLambda) method.invoke(this);
 		final var getter = serializedLambda.getImplMethodName();
 		// 如果函数名是get开头，则取掉开头的get，并将剩余部分首字母小写，否则返回函数名
@@ -41,16 +41,16 @@ public interface Getter<A, B> extends Function<A, B>, Serializable {
 		return GETTER_NAME_CACHE.computeIfAbsent(getClass(), __ -> propertyName0());
 	}
 
-	static <B> Getter<Map<String, B>, B> ofKey(String key) {
+	static <A,B> Getter<A,B> of(String propName,Function<A,B> func) {
 		return new Getter<>() {
 			@Override
-			public B apply(Map<String, B> abMap) {
-				return abMap.get(key);
+			public B apply(A a) {
+				return func.apply(a);
 			}
 
 			@Override
 			public String propertyName() {
-				return key;
+				return propName;
 			}
 		};
 	}
