@@ -19,7 +19,7 @@ import java.util.function.Function;
  * @param <B> get方法返回的类型
  */
 @FunctionalInterface
-public interface Getter<A, B> extends Function<A, B>, Serializable {
+public interface StaticMethodReferenceGetter<A, B> extends Function<A, B>, Serializable {
 	Map<Class<?>, String> GETTER_NAME_CACHE = new ConcurrentHashMap<>();
 
 	@SneakyThrows
@@ -41,8 +41,8 @@ public interface Getter<A, B> extends Function<A, B>, Serializable {
 		return GETTER_NAME_CACHE.computeIfAbsent(getClass(), __ -> propertyName0());
 	}
 
-	static <A,B> Getter<A,B> of(String propName,Function<A,B> func) {
-		return new Getter<>() {
+	static <A,B> StaticMethodReferenceGetter<A,B> of(String propName, Function<A,B> func) {
+		return new StaticMethodReferenceGetter<>() {
 			@Override
 			public B apply(A a) {
 				return func.apply(a);

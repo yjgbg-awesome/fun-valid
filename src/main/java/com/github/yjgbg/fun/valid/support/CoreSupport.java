@@ -1,6 +1,6 @@
 package com.github.yjgbg.fun.valid.support;
 
-import com.github.yjgbg.fun.valid.core.Getter;
+import com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter;
 import com.github.yjgbg.fun.valid.core.Validator;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,11 +12,11 @@ public interface CoreSupport<A> extends ValidatorSupport<A> {
   default Validator<A> plus(String messageTemplate, Function<A,Boolean> constraint) {
     return self().plus(Validator.simple(messageTemplate,constraint));
   }
-  default  <B> Validator<A> and(Getter<A,B> prop,Validator<B> validator) {
+  default  <B> Validator<A> and(StaticMethodReferenceGetter<A,B> prop, Validator<B> validator) {
     return self().plus(validator.transform(prop));
   }
 
-  default <B> Validator<A> and(Getter<A,B> prop,String messageTemplate,Function<B,Boolean> constraint) {
+  default <B> Validator<A> and(StaticMethodReferenceGetter<A,B> prop, String messageTemplate, Function<B,Boolean> constraint) {
     return self().and(prop,Validator.simple(messageTemplate,constraint));
   }
   /**
@@ -29,15 +29,15 @@ public interface CoreSupport<A> extends ValidatorSupport<A> {
       if (iterable == null)return Validator.none();
       final var atomicInt = new AtomicInteger(0);
       return StreamSupport.stream(iterable.spliterator(),false)
-          .map(a -> self().transform(Getter.<Iterable<A>,A>of(String.valueOf(atomicInt.getAndIncrement()), __ -> a)))
+          .map(a -> self().transform(StaticMethodReferenceGetter.<Iterable<A>,A>of(String.valueOf(atomicInt.getAndIncrement()), __ -> a)))
           .reduce(Validator.none(),Validator::plus);
     });
   }
-  default <B,CC extends Iterable<B>> Validator<A> andIterable(Getter<A,CC> prop,Validator<B> validator) {
+  default <B,CC extends Iterable<B>> Validator<A> andIterable(StaticMethodReferenceGetter<A,CC> prop, Validator<B> validator) {
     return self().and(prop,validator.iterable());
   }
 
-  default <B,CC extends Iterable<B>> Validator<A> andIterable(Getter<A,CC> prop,String messageTemplate,Function<B,Boolean> constraint) {
+  default <B,CC extends Iterable<B>> Validator<A> andIterable(StaticMethodReferenceGetter<A,CC> prop, String messageTemplate, Function<B,Boolean> constraint) {
     return self().and(prop,Validator.simple(messageTemplate,constraint).iterable());
   }
 }

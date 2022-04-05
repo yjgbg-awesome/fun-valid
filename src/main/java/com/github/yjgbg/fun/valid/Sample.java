@@ -19,17 +19,17 @@ public class Sample {
 
 	private static void v0() {
 		// 创建两个实体
-		final var entity0 = new Person("0", 0L, Gender.MALE,
+		final var entity0 = new Person("0", -1L, Gender.MALE,
 				"12345678910", "abc@def.com", null, Map.of());
 		final var entity1 = new Person("1", 1L, Gender.MALE,
 				"12345678910", "abc@def.com", Collections.singletonList(entity0), Map.of());
 		//创建两个校验器
 		// validator0校验id,name,gender,phone,email这几个字段
-		// message 可以使用%s取值被校验的字段
+		// message 可以使用{}取值被校验的字段
 		// constraint 校验规则
 		final var validator0 = Validator.<Person>none()
 				.plus("person不能为空", Objects::nonNull)
-				.and(Person::getId, "id应该大于0,而不是%s", id -> id != null && id > 0L)
+				.and(Person::getId, "id应该大于0,而不是{}", id -> id != null && id > 0L)
 				.and(Person::getName, "name应该是2-5个字", name -> name != null && name.length() >= 2 && name.length() < 5)
 				.and(Person::getGender, "应该是男性", gender -> Objects.equals(gender, Gender.MALE))
 				.and(Person::getPhone, "电话号码应该为11位数字", x -> x == null || Pattern.matches("^\\d{11}$", x))

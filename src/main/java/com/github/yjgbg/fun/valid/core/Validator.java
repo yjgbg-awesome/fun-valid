@@ -5,7 +5,9 @@ import com.github.yjgbg.fun.valid.support.StandardSupport;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.StringTokenizer;
 import java.util.function.Function;
 
 /**
@@ -47,7 +49,9 @@ public interface Validator<A> extends CoreSupport<A>, StandardSupport<A> {
   }
 
   static <A> Validator<A> simple(String messageTemplate, Function<@Nullable A, @NotNull Boolean> constraint) {
-    return (failFast, obj) -> constraint.apply(obj) ? Result.none() : Result.simple(obj, messageTemplate.replaceAll("%s", Objects.toString(obj)));
+    return (failFast, obj) -> constraint.apply(obj) ? Result.none() :
+        Result.simple(obj, Arrays.stream((messageTemplate+" ").split("\\{}"))
+                .reduce((a,b) ->a.endsWith("\\") ? a.substring(0,a.length()-1)+"{}"+b:a+ obj+b).map(it -> it.substring(0,it.length()-1)).orElseThrow());
   }
 
   /**
@@ -82,7 +86,7 @@ public interface Validator<A> extends CoreSupport<A>, StandardSupport<A> {
    * @param prop 一个A 到 B的转换器
    * @return 目标类型校验器
    */
-  default <B> Validator<B> transform(Getter<B, @Nullable A> prop) {
+  default <B> Validator<B> transform(StaticMethodReferenceGetter<B, @Nullable A> prop) {
     return (failFast, obj) -> Result.transform(prop.propertyName(), this.apply(failFast, obj != null ? prop.apply(obj) : null));
   }
 }
