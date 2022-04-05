@@ -35,7 +35,7 @@ public class Sample {
 				.and(Person::getPhone, "电话号码应该为11位数字", x -> x == null || Pattern.matches("^\\d{11}$", x))
 				.and(Person::getEmail, "email格式非法", x ->
 						x != null && Pattern.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$", x));
-		final var validator1 = validator0.andIterable(Person::getChildren, validator0);
+		final var validator1 = validator0.andItems(Person::getChildren, validator0);
 		// 第一个参数为是否开启快速校验（在第一个校验错误出现的时候，直接跳过后续校验）
 		final var errors1 = validator1.apply(false, entity1);
 		System.out.println(errors1.toMessageMap());
