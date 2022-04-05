@@ -2,7 +2,7 @@ package com.github.yjgbg.fun.valid.support;
 
 import com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter;
 import com.github.yjgbg.fun.valid.core.Validator;
-import org.intellij.lang.annotations.RegExp;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -50,7 +50,7 @@ public interface StandardSupport<A> extends ValidatorSupport<A> {
         x.compareTo(min) >= 0 && x.compareTo(max) <= 0);
   }
 
-  default <B extends String> Validator<A> regexp(StaticMethodReferenceGetter<A, B> prop, String message, boolean allowNull, @RegExp String regexp) {
+  default <B extends String> Validator<A> regexp(StaticMethodReferenceGetter<A, B> prop, String message, boolean allowNull, @Language("regexp") String regexp) {
     return self().and(prop, message, x -> x == null ? allowNull : Pattern.matches(regexp, x));
   }
 
