@@ -209,7 +209,7 @@ extends <a href="../support/CoreSupport.html" title="interface in com.github.yjg
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>default &lt;B&gt;&nbsp;<a href="Validator.html" title="interface in com.github.yjgbg.fun.valid.core">Validator</a>&lt;B&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#transform(com.github.yjgbg.fun.valid.core.Getter)">transform</a></span>&#8203;(<a href="Getter.html" title="interface in com.github.yjgbg.fun.valid.core">Getter</a>&lt;B,&#8203;@Nullable <a href="Validator.html" title="type parameter in Validator">A</a>&gt;&nbsp;prop)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#transform(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter)">transform</a></span>&#8203;(<a href="StaticMethodReferenceGetter.html" title="interface in com.github.yjgbg.fun.valid.core">StaticMethodReferenceGetter</a>&lt;B,&#8203;@Nullable <a href="Validator.html" title="type parameter in Validator">A</a>&gt;&nbsp;prop)</code></th>
 <td class="colLast">
 <div class="block">B类复杂校验器
  根据field类型的校验器和prop，构造一个目标类型校验器,规则为校验目标元素经过getter运算之后的结果符合validator校验</div>
@@ -221,14 +221,14 @@ extends <a href="../support/CoreSupport.html" title="interface in com.github.yjg
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;com.github.yjgbg.fun.valid.support.<a href="../support/CoreSupport.html" title="interface in com.github.yjgbg.fun.valid.support">CoreSupport</a></h3>
-<code><a href="../support/CoreSupport.html#and(com.github.yjgbg.fun.valid.core.Getter,com.github.yjgbg.fun.valid.core.Validator)">and</a>, <a href="../support/CoreSupport.html#and(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,java.util.function.Function)">and</a>, <a href="../support/CoreSupport.html#andIterable(com.github.yjgbg.fun.valid.core.Getter,com.github.yjgbg.fun.valid.core.Validator)">andIterable</a>, <a href="../support/CoreSupport.html#andIterable(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,java.util.function.Function)">andIterable</a>, <a href="../support/CoreSupport.html#iterable()">iterable</a>, <a href="../support/CoreSupport.html#plus(java.lang.String,java.util.function.Function)">plus</a></code></li>
+<code><a href="../support/CoreSupport.html#and(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,com.github.yjgbg.fun.valid.core.Validator)">and</a>, <a href="../support/CoreSupport.html#and(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,java.util.function.Function)">and</a>, <a href="../support/CoreSupport.html#andIterable(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,com.github.yjgbg.fun.valid.core.Validator)">andIterable</a>, <a href="../support/CoreSupport.html#andIterable(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,java.util.function.Function)">andIterable</a>, <a href="../support/CoreSupport.html#iterable()">iterable</a>, <a href="../support/CoreSupport.html#plus(java.lang.String,java.util.function.Function)">plus</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.com.github.yjgbg.fun.valid.support.StandardSupport">
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;com.github.yjgbg.fun.valid.support.<a href="../support/StandardSupport.html" title="interface in com.github.yjgbg.fun.valid.support">StandardSupport</a></h3>
-<code><a href="../support/StandardSupport.html#between(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,boolean,B,B)">between</a>, <a href="../support/StandardSupport.html#eq(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,B)">eq</a>, <a href="../support/StandardSupport.html#ge(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,boolean,B)">ge</a>, <a href="../support/StandardSupport.html#gt(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,boolean,B)">gt</a>, <a href="../support/StandardSupport.html#in(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,java.util.Collection)">in</a>, <a href="../support/StandardSupport.html#le(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,boolean,B)">le</a>, <a href="../support/StandardSupport.html#length(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,boolean,int,int)">length</a>, <a href="../support/StandardSupport.html#lt(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,boolean,B)">lt</a>, <a href="../support/StandardSupport.html#notIn(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,java.util.Collection)">notIn</a>, <a href="../support/StandardSupport.html#notNull(com.github.yjgbg.fun.valid.core.Getter,java.lang.String)">notNull</a>, <a href="../support/StandardSupport.html#notNull(java.lang.String)">notNull</a>, <a href="../support/StandardSupport.html#regexp(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,boolean,java.lang.String)">regexp</a>, <a href="../support/StandardSupport.html#size(com.github.yjgbg.fun.valid.core.Getter,java.lang.String,boolean,int,int)">size</a></code></li>
+<code><a href="../support/StandardSupport.html#between(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,boolean,B,B)">between</a>, <a href="../support/StandardSupport.html#eq(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,B)">eq</a>, <a href="../support/StandardSupport.html#ge(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,boolean,B)">ge</a>, <a href="../support/StandardSupport.html#gt(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,boolean,B)">gt</a>, <a href="../support/StandardSupport.html#in(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,java.util.Collection)">in</a>, <a href="../support/StandardSupport.html#le(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,boolean,B)">le</a>, <a href="../support/StandardSupport.html#length(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,boolean,int,int)">length</a>, <a href="../support/StandardSupport.html#lt(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,boolean,B)">lt</a>, <a href="../support/StandardSupport.html#notIn(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,java.util.Collection)">notIn</a>, <a href="../support/StandardSupport.html#notNull(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String)">notNull</a>, <a href="../support/StandardSupport.html#notNull(java.lang.String)">notNull</a>, <a href="../support/StandardSupport.html#regexp(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,boolean,java.lang.String)">regexp</a>, <a href="../support/StandardSupport.html#size(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter,java.lang.String,boolean,int,int)">size</a></code></li>
 </ul>
 </li>
 </ul>
@@ -354,13 +354,13 @@ extends <a href="../support/CoreSupport.html" title="interface in com.github.yjg
 </dl>
 </li>
 </ul>
-<a id="transform(com.github.yjgbg.fun.valid.core.Getter)">
+<a id="transform(com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>transform</h4>
-<pre class="methodSignature">default&nbsp;&lt;B&gt;&nbsp;<a href="Validator.html" title="interface in com.github.yjgbg.fun.valid.core">Validator</a>&lt;B&gt;&nbsp;transform&#8203;(<a href="Getter.html" title="interface in com.github.yjgbg.fun.valid.core">Getter</a>&lt;B,&#8203;@Nullable <a href="Validator.html" title="type parameter in Validator">A</a>&gt;&nbsp;prop)</pre>
+<pre class="methodSignature">default&nbsp;&lt;B&gt;&nbsp;<a href="Validator.html" title="interface in com.github.yjgbg.fun.valid.core">Validator</a>&lt;B&gt;&nbsp;transform&#8203;(<a href="StaticMethodReferenceGetter.html" title="interface in com.github.yjgbg.fun.valid.core">StaticMethodReferenceGetter</a>&lt;B,&#8203;@Nullable <a href="Validator.html" title="type parameter in Validator">A</a>&gt;&nbsp;prop)</pre>
 <div class="block">B类复杂校验器
  根据field类型的校验器和prop，构造一个目标类型校验器,规则为校验目标元素经过getter运算之后的结果符合validator校验</div>
 <dl>
