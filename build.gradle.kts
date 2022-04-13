@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.github.yjgbg"
-version = "2.0-SNAPSHOT"
+version = "2.1"
 description = "fun-valid"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
@@ -26,14 +26,14 @@ publishing {
     publications.create<MavenPublication>("snapshot") {
         from(components["java"])
         pom {
-            version = "${project.ext["publicationVersion"].toString()}-SNAPSHOT"
+            version = "${project.version}-SNAPSHOT"
         }
     }
     publications.create<MavenPublication>("hypers") {
         from(components["java"])
         pom {
             groupId = "com.hypers.weicl"
-            version = project.ext["publicationVersion"].toString()
+            version = project.version.toString()
         }
     }
     repositories.maven("https://oss.sonatype.org/content/repositories/snapshots") {
