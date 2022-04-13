@@ -33,11 +33,11 @@ public interface CoreSupport<A> extends ValidatorSupport<A> {
           .reduce(Validator.none(),Validator::plus);
     });
   }
-  default <B,CC extends Iterable<B>> Validator<A> andItems(StaticMethodReferenceGetter<A,CC> prop, Validator<B> validator) {
+  default <B> Validator<A> andItems(StaticMethodReferenceGetter<A,Iterable<B>> prop, Validator<B> validator) {
     return self().and(prop,validator.iterable());
   }
 
-  default <B,CC extends Iterable<B>> Validator<A> andItems(StaticMethodReferenceGetter<A,CC> prop, String messageTemplate, Function<B,Boolean> constraint) {
+  default <B> Validator<A> andItems(StaticMethodReferenceGetter<A,Iterable<B>> prop, String messageTemplate, Function<B,Boolean> constraint) {
     return self().and(prop,Validator.simple(messageTemplate,constraint).iterable());
   }
 }
