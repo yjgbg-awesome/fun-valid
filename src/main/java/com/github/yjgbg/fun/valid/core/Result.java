@@ -2,7 +2,6 @@ package com.github.yjgbg.fun.valid.core;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +17,7 @@ import java.util.stream.Collectors;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Result extends RuntimeException{
+
 	private static final Result NONE = new Result(null, Set.of(), Map.of());
 	Object rejectValue;
 	Set<String> messages;
@@ -98,6 +98,7 @@ public class Result extends RuntimeException{
 	public boolean hasError() {
 		return this != none();
 	}
+
 	public void throwIfHasError() {
 		if (hasError()) throw this;
 	}
@@ -132,4 +133,5 @@ public class Result extends RuntimeException{
 		}));
 		return messages;
 	}
+
 }

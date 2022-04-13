@@ -61,4 +61,9 @@ public interface StandardSupport<A> extends ValidatorSupport<A> {
   default <B extends Collection<?>> Validator<A> size(StaticMethodReferenceGetter<A, B> prop, String message, boolean allowNull, int min, int max) {
     return self().and(prop, message, x -> x == null ? allowNull : (x.size() >= min && x.size() <= max));
   }
+
+  default <B extends String> Validator<A> email(StaticMethodReferenceGetter<A, B> prop, String message, boolean allowNull) {
+    return self().regexp(prop, message, allowNull, "\\w+([- +.]\\w)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+
+  }
 }

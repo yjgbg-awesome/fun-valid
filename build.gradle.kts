@@ -43,16 +43,20 @@ publishing {
             password = project.ext["mavenPassword"].toString()
         }
     }
-    repositories.maven("https://nexus3.hypers.cc/repository/maven-releases/") {
-        name = "hypers"
-        credentials {
-            username = project.ext["hypersMavenUsername"].toString()
-            password = project.ext["hypersMavenPassword"].toString()
-        }
-    }
+//    repositories.maven("https://nexus3.hypers.cc/repository/maven-releases/") {
+//        name = "hypers"
+//        credentials {
+//            username = project.ext["hypersMavenUsername"].toString()
+//            password = project.ext["hypersMavenPassword"].toString()
+//        }
+//    }
 }
 
 tasks.withType<Javadoc> {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
