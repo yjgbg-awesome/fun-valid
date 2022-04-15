@@ -35,17 +35,13 @@ public interface Validator<A> extends CoreSupport<A>, StandardSupport<A> {
 
   /**
    * 简单校验器
-   * 根据constraint描述的规则，和message描述的错误信息构造一个简单校验器
+   * 根据constraint描述的规则，和messageTemplate描述的错误信息构造一个简单校验器
    *
    * @param <A>        校验的目标元素类型
-   * @param message    错误信息
+   * @param messageTemplate    错误信息
    * @param constraint 约束条件表达式
    * @return 简单校验器
    */
-  static <A> Validator<A> simple(Function<A, String> message, Function<@Nullable A, @NotNull Boolean> constraint) {
-    return (failFast, obj) -> constraint.apply(obj) ? Result.none() : Result.simple(obj, message.apply(obj));
-  }
-
   static <A> Validator<A> simple(String messageTemplate, Function<@Nullable A, @NotNull Boolean> constraint) {
     return (failFast, obj) -> constraint.apply(obj) ? Result.none() :
         Result.simple(obj, Arrays.stream((messageTemplate+" ").split("\\{}"))
