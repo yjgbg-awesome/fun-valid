@@ -22,12 +22,12 @@ public interface StandardSupport<A> extends ValidatorSupport<A> {
     return self().and(prop, Validator.simple(messageTemplate, x -> x == b));
   }
 
-  default <B> Validator<A> in(StaticMethodReferenceGetter<A, B> prop, String messageTemplate, Collection<B> values) {
-    return self().and(prop, Validator.simple(messageTemplate, values::contains));
+  default <B> Validator<A> in(StaticMethodReferenceGetter<A, B> prop, String messageTemplate,Boolean allowNull, Collection<B> values) {
+    return self().and(prop, Validator.simple(messageTemplate, x -> x == null ? allowNull : values.contains(x)));
   }
 
-  default <B> Validator<A> notIn(StaticMethodReferenceGetter<A, B> prop, String messageTemplate, Collection<B> values) {
-    return self().and(prop, Validator.simple(messageTemplate, x -> !values.contains(x)));
+  default <B> Validator<A> notIn(StaticMethodReferenceGetter<A, B> prop, String messageTemplate,boolean allowNull, Collection<B> values) {
+    return self().and(prop, Validator.simple(messageTemplate, x ->  x == null ? allowNull : !values.contains(x)));
   }
 
   default <B> Validator<A> notNull(StaticMethodReferenceGetter<A, B> prop, String messageTemplate) {
@@ -74,8 +74,8 @@ public interface StandardSupport<A> extends ValidatorSupport<A> {
     return self().regexp(prop, messageTemplate, allowNull, "\\w+([- +.]\\w)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
   }
 
-  default <B extends BigDecimal> Validator<A> digits(StaticMethodReferenceGetter<A, B> prop, String messageTemplate, int integer, int fraction) {
-    return self().and(prop,messageTemplate,it -> Math.abs(it.setScale(0, RoundingMode.DOWN).intValue()) < Math.pow(10,integer -1)
+  default <B extends BigDecimal> Validator<A> digits(StaticMethodReferenceGetter<A, B> prop, String messageTemplate,boolean allowNull, int integer, int fraction) {
+    return self().and(prop,messageTemplate,it -> it == null ? allowNull : Math.abs(it.setScale(0, RoundingMode.DOWN).intValue()) < Math.pow(10,integer -1)
         &&  it.subtract(it.setScale(0, RoundingMode.DOWN)).multiply(BigDecimal.valueOf(Math.pow(10,fraction))).remainder(BigDecimal.ONE).equals(BigDecimal.ZERO));
   }
 }

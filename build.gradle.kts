@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.github.yjgbg"
-version = "2.2"
+version = "2.3"
 description = "fun-valid"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
