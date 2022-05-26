@@ -2,6 +2,7 @@ package com.github.yjgbg.fun.valid.support;
 
 import com.github.yjgbg.fun.valid.core.StaticMethodReferenceGetter;
 import com.github.yjgbg.fun.valid.core.Validator;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -9,14 +10,14 @@ import java.util.stream.StreamSupport;
 
 public interface CoreSupport<A> extends ValidatorSupport<A> {
 
-  default Validator<A> plus(String messageTemplate, Function<A,Boolean> constraint) {
+  default Validator<A> plus(String messageTemplate, Function<@Nullable A,Boolean> constraint) {
     return self().plus(Validator.simple(messageTemplate,constraint));
   }
   default  <B> Validator<A> and(StaticMethodReferenceGetter<A,B> prop, Validator<B> validator) {
     return self().plus(validator.transform(prop));
   }
 
-  default <B> Validator<A> and(StaticMethodReferenceGetter<A,B> prop, String messageTemplate, Function<B,Boolean> constraint) {
+  default <B> Validator<A> and(StaticMethodReferenceGetter<A,B> prop, String messageTemplate, Function<@Nullable B,Boolean> constraint) {
     return self().and(prop,Validator.simple(messageTemplate,constraint));
   }
   /**
@@ -37,7 +38,7 @@ public interface CoreSupport<A> extends ValidatorSupport<A> {
     return self().and(prop,validator.iterable());
   }
 
-  default <B> Validator<A> andItems(StaticMethodReferenceGetter<A,Iterable<B>> prop, String messageTemplate, Function<B,Boolean> constraint) {
+  default <B> Validator<A> andItems(StaticMethodReferenceGetter<A,Iterable<B>> prop, String messageTemplate, Function<@Nullable B,Boolean> constraint) {
     return self().and(prop,Validator.simple(messageTemplate,constraint).iterable());
   }
 }
